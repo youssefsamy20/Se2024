@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        nav {
+            background-color: #555;
+            color: #fff;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            background-color: #777;
+            transition: background-color 0.3s;
+        }
+        nav a:hover {
+            background-color: #555;
+        }
+        section {
+            background-color: #fff;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .request-item {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .request-item h3 {
+            margin-top: 0;
+        }
+        .confirmed-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+    </header>
+    <nav>
+        <a href="#overview">Overview</a>
+        <a href="#organizations">Confirmed Registered Organizations</a>
+        <a href="#submissions">Submissions Review</a>
+        <a href="#requests">Confirmed Registered Donors</a>
+        <a href="#password">Password Management</a>
+        <a href="#registeredOrgs">Pending Registered Organizations</a>
+        <a href="#account">Account Management</a>
+        <a href="#notifications">Notifications</a>
+    </nav>
+
+    <section id="overview">
+        <h2>Overview Section</h2>
+        <!-- Add content for key statistics here -->
+    </section>
+
+    <section id="organizations">
+        <h2>Confirmed Registered Organizations</h2>
+        <input type="text" id="organizationSearchInput" placeholder="Search by organization name">
+        <button onclick="searchOrganization()">Search</button>
+        <select id="areaFilter">
+            <option value="">Filter by Area</option>
+            <!-- Options will be dynamically populated -->
+        </select>
+        <select id="governorateFilter">
+            <option value="">Filter by Governorate</option>
+            <!-- Options will be dynamically populated -->
+        </select>
+        <select id="typeFilter">
+            <option value="">Filter by Organization Type</option>
+            <!-- Options will be dynamically populated -->
+        </select>
+        <button onclick="filterOrganizations()">Apply Filters</button>
+        <div id="confirmedOrganizationList" class="confirmed-list"></div>
+       
+    </section>
+
+    <section id="submissions">
+        <h2>Submissions Review</h2>
+        <!-- Add content for reviewing submissions here -->
+    </section>
+
+    <section id="requests">
+        <h2>Confirmed Registered Donors</h2>
+        <div id="confirmedDonorList" class="confirmed-list"></div>
+    </section>
+
+    <section id="password">
+        <h2>Password Management</h2>
+        <div id="adminDetails">
+            <!-- Admin details will be dynamically populated here -->
+        </div>
+        <button onclick="changePassword()">Change Password</button>
+        <div id="passwordChangeForm" style="display: none;">
+            <label for="currentPassword">Current Password:</label>
+            <input id="currentPassword" type="password" required><br><br>
+            <label for="newPassword">New Password:</label>
+            <input id="newPassword" type="password" required><br><br>
+            <label for="confirmNewPassword">Confirm New Password:</label>
+            <input id="confirmNewPassword" type="password" required><br><br>
+            <button onclick="updatePassword()">Update Password</button>
+            <p class="error-message" id="passwordChangeErrorMessage"></p>
+        </div>
+    </section>
+
+    <section id="registeredOrgs">
+        <h2>Pending Registered Organizations</h2>
+        <ul id="organizationList"></ul>
+    </section>
+
+    <section id="account">
+        <h2>Account Management</h2>
+        <!-- Add content for managing accounts here -->
+    </section>
+
+    <section id="notifications">
+        <h2>Notifications</h2>
+        <!-- Add content for notifications here -->
+    </section>
+
+    <section id="registeredDonors">
+        <h2>Pending Registered Donors</h2>
+        <ul id="donorList"></ul>
+    </section>
+    <script>
+        // Retrieve admin details from localStorage
+        const adminDetails = JSON.parse(localStorage.getItem('adminDetails')) || {};
+    
+        // Populate admin details section
+        const adminDetailsSection = document.getElementById('adminDetails');
+        adminDetailsSection.innerHTML = `
+            <h3>Admin Details</h3>
+            <p><strong>Name:</strong> ${adminDetails.name}</p>
+            <p><strong>Email:</strong> ${adminDetails.email}</p>
+            <!-- Add more fields if necessary -->
+        `;
+    
+        function changePassword() {
+            document.getElementById('passwordChangeForm').style.display = 'block';
+        }
+    
+        function searchOrganization() {
+    const searchTerm = document.getElementById('organizationSearchInput').value.trim().toLowerCase();
+    const confirmedOrganizations = JSON.parse(localStorage.getItem('confirmedOrganizations')) || [];
+    const confirmedOrganizationList = document.getElementById('confirmedOrganizationList');
+
+    // Clear previous search results
+    confirmedOrganizationList.innerHTML = '';
+
+    if (searchTerm === '') {
+        // If the search term is empty, display all confirmed organizations
+        confirmedOrganizations.forEach(organization => {
+            const confirmedItem = document.createElement('div');
+            confirmedItem.classList.add('confirmed-item');
+            confirmedItem.innerHTML = `
+                <h3>Organization Details</h3>
+                <p><strong>First Name:</strong> ${organization.orgFirstName}</p>
+                <p><strong>Last Name:</strong> ${organization.orgLastName}</p>
+                <p><strong>Gender:</strong> ${organization.orgGender}</p>
+                <p><strong>Email:</strong> ${organization.orgEmail}</p>
+                <p><strong>Password:</strong> ${organization.orgPassword}</p>
+                <p><strong>Contact Number:</strong> ${organization.orgContactNumber}</p>
+                <p><strong>Name:</strong> ${organization.orgName}</p>
+                <p><strong>Area:</strong> ${organization.orgArea}</p>
+                <p><strong>Governorate:</strong> ${organization.orgGovernorate}</p>
+                <p><strong>Type:</strong> ${organization.orgType}</p>
+                <p><strong>Verification Document:</strong> ${organization.verificationDocument}</p>
+            `;
+            const viewLocationButton = document.createElement('button');
+            viewLocationButton.textContent = 'View Pinned Location';
+            viewLocationButton.addEventListener('click', () => viewPinnedLocation(organization));
+            confirmedItem.appendChild(viewLocationButton);
+            confirmedOrganizationList.appendChild(confirmedItem);
+        });
+    } else {
+        // Filter and display organizations based on the search term
+        confirmedOrganizations.forEach(organization => {
+            if (organization.orgName.toLowerCase().includes(searchTerm)) {
+                const confirmedItem = document.createElement('div');
+                confirmedItem.classList.add('confirmed-item');
+                confirmedItem.innerHTML = `
+                    <h3>Organization Details</h3>
+                    <p><strong>First Name:</strong> ${organization.orgFirstName}</p>
+                <p><strong>Last Name:</strong> ${organization.orgLastName}</p>
+                <p><strong>Gender:</strong> ${organization.orgGender}</p>
+                <p><strong>Email:</strong> ${organization.orgEmail}</p>
+                <p><strong>Password:</strong> ${organization.orgPassword}</p>
+                <p><strong>Contact Number:</strong> ${organization.orgContactNumber}</p>
+                <p><strong>Name:</strong> ${organization.orgName}</p>
+                <p><strong>Area:</strong> ${organization.orgArea}</p>
+                <p><strong>Governorate:</strong> ${organization.orgGovernorate}</p>
+                <p><strong>Type:</strong> ${organization.orgType}</p>
+                <p><strong>Verification Document:</strong> ${organization.verificationDocument}</p>
+                `;
+                const viewLocationButton = document.createElement('button');
+                viewLocationButton.textContent = 'View Pinned Location';
+                viewLocationButton.addEventListener('click', () => viewPinnedLocation(organization));
+                confirmedItem.appendChild(viewLocationButton);
+                confirmedOrganizationList.appendChild(confirmedItem);
+            }
+        });
+    }
+
+    // Display a message if no organizations match the search term
+    if (confirmedOrganizationList.children.length === 0) {
+        const noResultsMessage = document.createElement('p');
+        noResultsMessage.textContent = 'No organizations found matching the search term.';
+        confirmedOrganizationList.appendChild(noResultsMessage);
+    }
+}
+
+function populateFilterOptions() {
+    const confirmedOrganizations = JSON.parse(localStorage.getItem('confirmedOrganizations')) || [];
+    const areas = [...new Set(confirmedOrganizations.map(org => org.orgArea))];
+    const governorates = [...new Set(confirmedOrganizations.map(org => org.orgGovernorate))];
+    const types = [...new Set(confirmedOrganizations.map(org => org.orgType))];
+
+    const areaFilter = document.getElementById('areaFilter');
+    const governorateFilter = document.getElementById('governorateFilter');
+    const typeFilter = document.getElementById('typeFilter');
+
+    // Clear previous options
+    areaFilter.innerHTML = '<option value="">Filter by Area</option>';
+    governorateFilter.innerHTML = '<option value="">Filter by Governorate</option>';
+    typeFilter.innerHTML = '<option value="">Filter by Organization Type</option>';
+
+    // Populate options
+    areas.forEach(area => {
+        const option = document.createElement('option');
+        option.textContent = area;
+        option.value = area;
+        areaFilter.appendChild(option);
+    });
+
+    governorates.forEach(governorate => {
+        const option = document.createElement('option');
+        option.textContent = governorate;
+        option.value = governorate;
+        governorateFilter.appendChild(option);
+    });
+
+    types.forEach(type => {
+        const option = document.createElement('option');
+        option.textContent = type;
+        option.value = type;
+        typeFilter.appendChild(option);
+    });
+}
+
+
+// Call the function to populate filter options
+populateFilterOptions();
+
+// Function to filter organizations based on selected filters
+function filterOrganizations() {
+    const areaFilterValue = document.getElementById('areaFilter').value;
+    const governorateFilterValue = document.getElementById('governorateFilter').value;
+    const typeFilterValue = document.getElementById('typeFilter').value;
+
+    const confirmedOrganizations = JSON.parse(localStorage.getItem('confirmedOrganizations')) || [];
+    const filteredOrganizations = confirmedOrganizations.filter(org => {
+        if (areaFilterValue && org.orgArea !== areaFilterValue) return false;
+        if (governorateFilterValue && org.orgGovernorate !== governorateFilterValue) return false;
+        if (typeFilterValue && org.orgType !== typeFilterValue) return false;
+        return true;
+    });
+
+    // Display filtered organizations
+    const confirmedOrganizationList = document.getElementById('confirmedOrganizationList');
+    confirmedOrganizationList.innerHTML = ''; // Clear previous results
+
+    if (filteredOrganizations.length === 0) {
+        const noResultsMessage = document.createElement('p');
+        noResultsMessage.textContent = 'No organizations found matching the selected filters.';
+        confirmedOrganizationList.appendChild(noResultsMessage);
+    } else {
+        filteredOrganizations.forEach(organization => {
+            const confirmedItem = document.createElement('div');
+            confirmedItem.classList.add('confirmed-item');
+            confirmedItem.innerHTML = `
+                <h3>Organization Details</h3>
+                <p><strong>First Name:</strong> ${organization.orgFirstName}</p>
+                <p><strong>Last Name:</strong> ${organization.orgLastName}</p>
+                <p><strong>Gender:</strong> ${organization.orgGender}</p>
+                <p><strong>Email:</strong> ${organization.orgEmail}</p>
+                <p><strong>Password:</strong> ${organization.orgPassword}</p>
+                <p><strong>Contact Number:</strong> ${organization.orgContactNumber}</p>
+                <p><strong>Name:</strong> ${organization.orgName}</p>
+                <p><strong>Area:</strong> ${organization.orgArea}</p>
+                <p><strong>Governorate:</strong> ${organization.orgGovernorate}</p>
+                <p><strong>Type:</strong> ${organization.orgType}</p>
+                <p><strong>Verification Document:</strong> ${organization.verificationDocument}</p>
+            `;
+            const viewLocationButton = document.createElement('button');
+            viewLocationButton.textContent = 'View Pinned Location';
+            viewLocationButton.addEventListener('click', () => viewPinnedLocation(organization));
+            confirmedItem.appendChild(viewLocationButton);
+            confirmedOrganizationList.appendChild(confirmedItem);
+        });
+    }
+}
+
+
+
+        function updatePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+    
+            // Check if the current password matches the stored password
+            if (currentPassword !== adminDetails.password) {
+                document.getElementById('passwordChangeErrorMessage').textContent = 'Current password is incorrect.';
+                return;
+            }
+    
+            // Check if the new password and confirm new password match
+            if (newPassword !== confirmNewPassword) {
+                document.getElementById('passwordChangeErrorMessage').textContent = 'New password and confirm password do not match.';
+                return;
+            }
+    
+            // Update the password in adminDetails object
+            adminDetails.password = newPassword;
+    
+            // Update the adminDetails in localStorage
+            localStorage.setItem('adminDetails', JSON.stringify(adminDetails));
+    
+            // Reset the form and display a success message
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmNewPassword').value = '';
+            document.getElementById('passwordChangeForm').style.display = 'none';
+            document.getElementById('passwordChangeErrorMessage').textContent = 'Password updated successfully.';
+        }
+    </script>
+
+    <script>
+        // Retrieve organization details from localStorage
+        const registeredOrganizations = JSON.parse(localStorage.getItem('registeredOrganizations')) || [];
+
+        // Populate confirmed organization list
+        const confirmedOrganizations = JSON.parse(localStorage.getItem('confirmedOrganizations')) || [];
+        const confirmedOrganizationList = document.getElementById('confirmedOrganizationList');
+        confirmedOrganizations.forEach(organization => {
+            const confirmedItem = document.createElement('div');
+            confirmedItem.classList.add('confirmed-item');
+            confirmedItem.innerHTML = `
+            <h3>Organization Details</h3>
+            <p><strong>First Name:</strong> ${organization.orgFirstName}</p>
+            <p><strong>Last Name:</strong> ${organization.orgLastName}</p>
+                <p><strong>Gender:</strong> ${organization.orgGender}</p>
+                <p><strong>Email:</strong> ${organization.orgEmail}</p>
+                <p><strong>Password:</strong> ${organization.orgPassword}</p>
+                <p><strong>Contact Number:</strong> ${organization.orgContactNumber}</p>
+                <p><strong>Name:</strong> ${organization.orgName}</p>
+                <p><strong>Area:</strong> ${organization.orgArea}</p>
+                <p><strong>Governorate:</strong> ${organization.orgGovernorate}</p>
+                <p><strong>Type:</strong> ${organization.orgType}</p>
+                <p><strong>Verification Document:</strong> ${organization.verificationDocument}</p>
+            `;
+            const viewLocationButton = document.createElement('button');
+        viewLocationButton.textContent = 'View Pinned Location';
+        viewLocationButton.addEventListener('click', () => viewPinnedLocation(organization));
+        confirmedItem.appendChild(viewLocationButton);
+        const deleteOrganizationButton = document.createElement('button');
+deleteOrganizationButton.textContent = 'Delete';
+deleteOrganizationButton.addEventListener('click', () => deleteConfirmedOrganization(organization));
+confirmedItem.appendChild(deleteOrganizationButton);
+            confirmedOrganizationList.appendChild(confirmedItem);
+        });
+        function deleteConfirmedDonor(donor) {
+    const index = confirmedDonors.findIndex(d => d.name === donor.name && d.email === donor.email);
+    if (index !== -1) {
+        // Remove the donor from the confirmed donors list
+        confirmedDonors.splice(index, 1);
+        localStorage.setItem('confirmedDonors', JSON.stringify(confirmedDonors));
+
+        // Update the DOM: Remove the donor item from the list
+        confirmedDonorList.removeChild(confirmedDonorList.getElementsByClassName('confirmed-item')[index]);
+    }
+}
+
+function deleteConfirmedOrganization(organization) {
+    const index = confirmedOrganizations.findIndex(org => org.name === organization.name && org.email === organization.email);
+    if (index !== -1) {
+        // Remove the organization from the confirmed organizations list
+        confirmedOrganizations.splice(index, 1);
+        localStorage.setItem('confirmedOrganizations', JSON.stringify(confirmedOrganizations));
+
+        // Update the DOM: Remove the organization item from the list
+        confirmedOrganizationList.removeChild(confirmedOrganizationList.getElementsByClassName('confirmed-item')[index]);
+    }
+}
+
+        function viewPinnedLocation(organization) {
+        // Redirect to map.html
+        window.location.href = 'map.html';
+    }
+        // Populate pending organization list
+        const organizationList = document.getElementById('organizationList');
+        registeredOrganizations.forEach(organization => {
+            const organizationItem = document.createElement('li');
+            organizationItem.classList.add('request-item');
+            organizationItem.innerHTML = `
+            <h3>Organization Details</h3>
+            <p><strong>First Name:</strong> ${organization.orgFirstName}</p>
+                <p><strong>Last Name:</strong> ${organization.orgLastName}</p>
+                <p><strong>Gender:</strong> ${organization.orgGender}</p>
+                <p><strong>Email:</strong> ${organization.orgEmail}</p>
+                <p><strong>Password:</strong> ${organization.orgPassword}</p>
+                <p><strong>Contact Number:</strong> ${organization.orgContactNumber}</p>
+                <p><strong>Name:</strong> ${organization.orgName}</p>
+                <p><strong>Area:</strong> ${organization.orgArea}</p>
+                <p><strong>Governorate:</strong> ${organization.orgGovernorate}</p>
+                <p><strong>Type:</strong> ${organization.orgType}</p>
+                <p><strong>Verification Document:</strong> ${organization.verificationDocument}</p>
+                
+                
+            `;
+            const downloadButton = document.createElement('button');
+            downloadButton.textContent = 'Download';
+            downloadButton.addEventListener('click', () => downloadSubmission(organization, 'organization'));
+            organizationItem.appendChild(downloadButton);
+
+            const approveButton = document.createElement('button');
+            approveButton.textContent = 'Approve';
+            approveButton.addEventListener('click', () => approveOrganization(organization));
+            organizationItem.appendChild(approveButton);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', () => deleteOrganization(organization));
+            organizationItem.appendChild(deleteButton);
+
+            organizationList.appendChild(organizationItem);
+        });
+        function viewFullDetails(data) {
+    // Store the selected donor data in localStorage
+    localStorage.setItem('selectedDonor', JSON.stringify(data));
+
+    // Redirect to donor_details.html
+    window.location.href = 'DonorDetails.html';
+}
+        function appendViewDetailsButton(container, data) {
+    const viewDetailsButton = document.createElement('button');
+    viewDetailsButton.textContent = 'View Full Details';
+    viewDetailsButton.addEventListener('click', () => viewFullDetails(data));
+    container.appendChild(viewDetailsButton);
+}
+
+        // Retrieve donor details from localStorage
+        const registeredDonors = JSON.parse(localStorage.getItem('registeredDonors')) || [];
+
+        // Populate confirmed donor list
+        const confirmedDonors = JSON.parse(localStorage.getItem('confirmedDonors')) || [];
+        const confirmedDonorList = document.getElementById('confirmedDonorList');
+        confirmedDonors.forEach(donor => {
+            const confirmedItem = document.createElement('div');
+            confirmedItem.classList.add('confirmed-item');
+            confirmedItem.innerHTML = `
+            <h3>Donor Details</h3>
+                <p><strong>Type:</strong> ${donor.type}</p>
+                <p><strong>Name:</strong> ${donor.name}</p>
+                <p><strong>Email:</strong> ${donor.email}</p>
+                <p><strong>Gender:</strong> ${donor.gender}</p>
+                <p><strong>Contact Number:</strong> ${donor.contactNumber}</p>
+                <p><strong>Address:</strong> ${donor.address}</p>
+                <p><strong>Area:</strong> ${donor.area}</p>
+                <p><strong>Governorate:</strong> ${donor.governorate}</p>
+                <p><strong>Verification Document:</strong> ${donor.verificationDocument}</p>
+            `;
+
+            
+            appendViewDetailsButton(confirmedItem, donor);
+            const deleteDonorButton = document.createElement('button');
+deleteDonorButton.textContent = 'Delete';
+deleteDonorButton.addEventListener('click', () => deleteConfirmedDonor(donor));
+confirmedItem.appendChild(deleteDonorButton);
+
+            confirmedDonorList.appendChild(confirmedItem);
+        });
+
+        // Populate pending donor list
+        const donorList = document.getElementById('donorList');
+        registeredDonors.forEach(donor => {
+            const donorItem = document.createElement('li');
+            donorItem.classList.add('request-item');
+            donorItem.innerHTML = `
+            <h3>Donor Details</h3>
+                <p><strong>Type:</strong> ${donor.type}</p>
+                <p><strong>Name:</strong> ${donor.name}</p>
+                <p><strong>Email:</strong> ${donor.email}</p>
+                <p><strong>Gender:</strong> ${donor.gender}</p>
+                <p><strong>Contact Number:</strong> ${donor.contactNumber}</p>
+                <p><strong>Address:</strong> ${donor.address}</p>
+                <p><strong>Area:</strong> ${donor.area}</p>
+                <p><strong>Governorate:</strong> ${donor.governorate}</p>
+                <p><strong>Verification Document:</strong> ${donor.verificationDocument}</p>
+               
+            `;
+
+            const downloadButton = document.createElement('button');
+            downloadButton.textContent = 'Download';
+            downloadButton.addEventListener('click', () => downloadSubmission(donor, 'donor'));
+            donorItem.appendChild(downloadButton);
+
+            const approveButton = document.createElement('button');
+            approveButton.textContent = 'Approve';
+            approveButton.addEventListener('click', () => approveDonor(donor));
+            donorItem.appendChild(approveButton);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', () => deleteDonor(donor));
+            donorItem.appendChild(deleteButton);
+            appendViewDetailsButton(donorItem, donor);
+            donorList.appendChild(donorItem);
+        });
+
+        function downloadSubmission(data, type) {
+            const filename = type === 'organization' ? 'organization_submission.json' : 'donor_submission.json';
+            const fileData = JSON.stringify(data, null, 2);
+            const blob = new Blob([fileData], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        function deleteOrganization(organization) {
+            // Find the index of the organization in the registeredOrganizations array
+            const index = registeredOrganizations.findIndex(org => org.name === organization.name && org.email === organization.email);
+
+            // If the organization is found, remove it from the array
+            if (index !== -1) {
+                registeredOrganizations.splice(index, 1);
+
+                // Update the localStorage with the modified array
+                localStorage.setItem('registeredOrganizations', JSON.stringify(registeredOrganizations));
+
+                // Remove the organization from the DOM
+                const organizationList = document.getElementById('organizationList');
+                const items = organizationList.getElementsByClassName('request-item');
+                items[index].remove();
+            }
+            localStorage.setItem('registrationStatus', 'denied');
+
+        }
+
+        function deleteDonor(donor) {
+            // Find the index of the donor in the registeredDonors array
+            const index = registeredDonors.findIndex(d => d.type === donor.type && d.name === donor.name && d.email === donor.email);
+
+            // If the donor is found, remove it from the array
+            if (index !== -1) {
+                registeredDonors.splice(index, 1);
+
+                // Update the localStorage with the modified array
+                localStorage.setItem('registeredDonors', JSON.stringify(registeredDonors));
+
+                // Remove the donor from the DOM
+                const donorList = document.getElementById('donorList');
+                const items = donorList.getElementsByClassName('request-item');
+                items[index].remove();
+            }
+            localStorage.setItem('registrationStatus', 'denied');
+        }
+
+        function approveOrganization(organization) {
+            const index = registeredOrganizations.findIndex(org => org.name === organization.name && org.email === organization.email);
+            if (index !== -1) {
+                // Move the organization from pending list to confirmed list
+                const confirmedOrganization = registeredOrganizations.splice(index, 1)[0];
+                const confirmedOrganizations = JSON.parse(localStorage.getItem('confirmedOrganizations')) || [];
+                confirmedOrganizations.push(confirmedOrganization);
+                localStorage.setItem('registeredOrganizations', JSON.stringify(registeredOrganizations));
+                localStorage.setItem('confirmedOrganizations', JSON.stringify(confirmedOrganizations));
+
+                // Update the DOM
+                const organizationList = document.getElementById('organizationList');
+                organizationList.removeChild(organizationList.getElementsByClassName('request-item')[index]);
+                // Add to confirmed list (if applicable)
+                const confirmedOrganizationList = document.getElementById('confirmedOrganizationList');
+                const confirmedItem = document.createElement('div');
+                confirmedItem.classList.add('confirmed-item');
+                confirmedItem.innerHTML = `
+                <h3>Organization Details</h3>
+                    <p><strong>Name:</strong> ${confirmedOrganization.name}</p>
+                    <p><strong>Email:</strong> ${confirmedOrganization.email}</p>
+                    <p><strong>Area:</strong> ${confirmedOrganization.area}</p>
+                    <p><strong>Governorate:</strong> ${confirmedOrganization.governorate}</p>
+                    <p><strong>Type:</strong> ${confirmedOrganization.orgType}</p>
+                    <p><strong>Verification Document:</strong> ${confirmedOrganization.verificationDocument}</p>
+                `;
+                confirmedOrganizationList.appendChild(confirmedItem);
+            }
+            localStorage.setItem('registrationStatus', 'approved');
+
+        }
+
+        function approveDonor(donor) {
+            // Move donor from pending to confirmed
+            const index = registeredDonors.findIndex(d => d.name === donor.name && d.email === donor.email);
+            if (index !== -1) {
+                const confirmedDonor = registeredDonors.splice(index, 1)[0];
+                const confirmedDonors = JSON.parse(localStorage.getItem('confirmedDonors')) || [];
+                confirmedDonors.push(confirmedDonor);
+                localStorage.setItem('registeredDonors', JSON.stringify(registeredDonors));
+                localStorage.setItem('confirmedDonors', JSON.stringify(confirmedDonors));
+
+                // Update the DOM
+                const donorList = document.getElementById('donorList');
+                donorList.removeChild(donorList.getElementsByClassName('request-item')[index]);
+
+                // Add to confirmed list
+                const confirmedDonorList = document.getElementById('confirmedDonorList');
+                const confirmedItem = document.createElement('div');
+                confirmedItem.classList.add('confirmed-item');
+                confirmedItem.innerHTML = `
+                <h3>Donor Details</h3>
+                
+                    <p><strong>Type:</strong> ${confirmedDonor.type}</p>
+                    <p><strong>Name:</strong> ${confirmedDonor.name}</p>
+                    <p><strong>Email:</strong> ${confirmedDonor.email}</p>
+                    <p><strong>Gender:</strong> ${confirmedDonor.gender}</p>
+                    <p><strong>Contact Number:</strong> ${confirmedDonor.contactNumber}</p>
+                    <p><strong>Address:</strong> ${confirmedDonor.address}</p>
+                    <p><strong>Area:</strong> ${confirmedDonor.area}</p>
+                    <p><strong>Governorate:</strong> ${confirmedDonor.governorate}</p>
+                    <p><strong>Verification Document:</strong> ${confirmedDonor.verificationDocument}</p>
+                    
+                `;
+                confirmedDonorList.appendChild(confirmedItem);
+            }
+            localStorage.setItem('registrationStatus', 'approved');
+        }
+        
+    </script>
+</body>
+</html> 

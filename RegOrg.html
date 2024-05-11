@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Registration with Map</title>
+    <style>
+        /* Existing styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+        }
+        label, #map {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #map {
+            height: 300px; /* Define a height for map */
+            width: 100%;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Organization Registration</h1>
+
+        <label for="orgFirstName"> First Name:</label>
+        <input id="orgFirstName" type="text" required><br><br>
+
+        <label for="orgLastName"> Last Name:</label>
+        <input id="orgLastName" type="text" required><br><br>
+
+        <label for="orgGender"> Gender:</label>
+        <select id="orgGender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select><br><br>
+
+        <label for="orgEmail"> Email:</label>
+        <input id="orgEmail" type="email" required><br><br>
+        
+        <label for="orgPassword">Password:</label>
+        <input id="orgPassword" type="password" required><br><br>
+
+        <label for="repeatPassword">Repeat Password:</label>
+        <input id="repeatPassword" type="password" required><br><br>
+        
+        <label for="orgContactNumber">Organization Contact Number:</label>
+        <input id="orgContactNumber" type="text" required><br><br>
+
+        <label for="orgName">Organization Name:</label>
+        <input id="orgName" type="text" required><br><br>
+        
+        <label for="orgArea">Organization Area:</label>
+        <input id="orgArea" type="text" required><br><br>
+        
+        <label for="orgGovernorate">Organization Governorate:</label>
+        <input id="orgGovernorate" type="text" required><br><br>
+        
+        <label for="orgType">Organization Type:</label>
+        <select id="orgType" required>
+            <option value="charity">charity</option>
+            <option value="hospital">hospital</option>
+            <option value="mosque">mosque</option>
+            <option value="church">church</option>
+            <option value="orphanage">orphanage</option>
+            <option value="public school">public school</option>
+        </select><br><br>
+        
+        
+        <label for="verificationDocument">Verification Document:</label>
+        <input id="verificationDocument" type="file" required accept=".pdf, .doc, .docx"><br><br>
+
+        <label >Please Choose Your Location On Map</label>
+        <div id="map"></div> <!-- Map placeholder -->
+        
+        <button onclick="register()">Create Account</button>
+        
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+    
+    <script>
+        let registeredOrganizations = JSON.parse(localStorage.getItem('registeredOrganizations')) || [];
+    
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 30.0444, lng: 31.2357}, // Cairo coordinates
+                zoom: 12
+            });
+
+            map.addListener('click', function(event) {
+                var clickedLocation = event.latLng; // Clicked location's coordinates
+                var marker = new google.maps.Marker({
+                    position: clickedLocation,
+                    map: map,
+                    title: 'Your Organization Location'
+                });
+                
+                localStorage.setItem('orgLocation', JSON.stringify({lat: clickedLocation.lat(), lng: clickedLocation.lng()}));
+            });
+        }
+
+        function register() {
+            const orgFirstName = document.getElementById('orgFirstName').value;
+            const orgLastName = document.getElementById('orgLastName').value;
+            const orgGender = document.getElementById('orgGender').value;
+            const orgEmail = document.getElementById('orgEmail').value;
+            const orgPassword = document.getElementById('orgPassword').value;
+            const repeatPassword = document.getElementById('repeatPassword').value;
+            const orgContactNumber = document.getElementById('orgContactNumber').value;
+            const orgName = document.getElementById('orgName').value;
+            const orgArea = document.getElementById('orgArea').value;
+            const orgGovernorate = document.getElementById('orgGovernorate').value;
+            const orgType = document.getElementById('orgType').value;
+            const verificationDocument = document.getElementById('verificationDocument').files[0];
+    
+            if (orgFirstName && orgLastName && orgGender && orgEmail && orgPassword && repeatPassword && orgContactNumber && orgName && orgArea && orgGovernorate && orgType && verificationDocument) {
+                if (orgPassword !== repeatPassword) {
+                    document.getElementById('errorMessage').textContent = 'Passwords do not match.';
+                    return;
+                }
+
+                const organization = {
+                    orgFirstName: orgFirstName,
+                    orgLastName: orgLastName,
+                    orgGender: orgGender,
+                    orgEmail: orgEmail,
+                    orgPassword: orgPassword,
+                    orgContactNumber: orgContactNumber,
+                    orgName: orgName,
+                    orgArea: orgArea,
+                    orgGovernorate: orgGovernorate,
+                    orgType: orgType,
+                    verificationDocument: verificationDocument.name,
+                    location: JSON.parse(localStorage.getItem('orgLocation')) // Retrieve stored location
+                };
+    
+                registeredOrganizations.push(organization);
+                localStorage.setItem('registeredOrganizations', JSON.stringify(registeredOrganizations));
+                window.location.href = 'notification.html?org=' + encodeURIComponent(orgEmail); // Redirect to notification page with organization email as parameter // Assuming you want to redirect to an admin dashboard
+            } else {
+                document.getElementById('errorMessage').textContent = 'Please fill out all fields and upload the verification document.';
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4x9KD9_ecTbberyIO4vLzj7FUjxewxss&callback=initMap" async defer></script>
+</body>
+</html>

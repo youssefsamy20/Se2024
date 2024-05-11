@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Registration</title>
+    <style>
+        /* Existing styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+        }
+        label, input[type="text"], input[type="email"], input[type="password"] {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Registration</h1>
+
+        <label for="adminName">Admin Name:</label>
+        <input id="adminName" type="text" required><br><br>
+        
+        <label for="adminEmail">Admin Email:</label>
+        <input id="adminEmail" type="email" required><br><br>
+        
+        <label for="adminPassword">Password:</label>
+        <input id="adminPassword" type="password" required><br><br>
+        
+        <label for="repeatPassword">Repeat Password:</label>
+        <input id="repeatPassword" type="password" required><br><br>
+
+        <button onclick="register()">Create Account</button>
+        
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+    
+    <script>
+        let registeredAdmins = JSON.parse(localStorage.getItem('registeredAdmins')) || [];
+
+        function register() {
+    const adminName = document.getElementById('adminName').value;
+    const adminEmail = document.getElementById('adminEmail').value;
+    const password = document.getElementById('adminPassword').value;
+    const repeatPassword = document.getElementById('repeatPassword').value;
+
+    // Validate if all fields are filled and passwords match
+    if (adminName && adminEmail && password && repeatPassword && password === repeatPassword) {
+        // Check if admin with the same email already exists
+        const existingAdmin = registeredAdmins.find(admin => admin.email === adminEmail);
+        if (existingAdmin) {
+            document.getElementById('errorMessage').textContent = 'Admin with this email already exists.';
+            return;
+        }
+
+        // Create admin object
+        const admin = {
+            name: adminName,
+            email: adminEmail,
+            password: password,
+        };
+
+        // Set the admin details in localStorage
+        localStorage.setItem('adminDetails', JSON.stringify(admin));
+
+        // Redirect to a confirmation page or admin dashboard
+        window.location.href = 'admin_confirmation.html';
+    } else {
+        document.getElementById('errorMessage').textContent = 'Please fill out all fields and make sure passwords match.';
+    }
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Path</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Would You Like To Begin Your Jorney In Helping The World!</h1>
+        <button onclick="redirectToPost()">Post</button>
+        
+    </div>
+
+    <script>
+        function redirectToPost() {
+            const email = localStorage.getItem('loggedInUser');
+            const confirmedOrganizations = JSON.parse(localStorage.getItem('confirmedOrganizations')) || [];
+            const lastConfirmedOrg = confirmedOrganizations[confirmedOrganizations.length - 1];
+            if (lastConfirmedOrg) {
+                switch (lastConfirmedOrg.orgType) {
+                    case 'church':
+                    case 'mosque':
+                    case 'charity':
+                    case 'orphanage':
+                        window.location.href = 'DonationPosting.html';
+                        break;
+                    case 'public school':
+                        window.location.href = 'TeachingPosting.html';
+                        break;
+                    case 'hospital':
+                        window.location.href = 'MedicalPosting.html';
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        
+    </script>
+</body>
+</html>
