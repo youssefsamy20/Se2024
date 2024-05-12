@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Login</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Website Login</h1>
+        <label for="email">Email:</label>
+        <input id="email" type="email" required><br><br>
+        
+        <label for="password">Password:</label>
+        <input id="password" type="password" required><br><br>
+
+        <button onclick="login()">Sign In</button>
+        
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+    
+    <script>
+        function login() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const adminDetails = JSON.parse(localStorage.getItem('adminDetails'));
+
+// Check if the entered credentials match admin
+
+    // Check for specific usernames and passwords
+    if (adminDetails && email === adminDetails.email && password === adminDetails.password) {
+    // Redirect to admin dashboard
+    window.location.href = 'adminDash.html';
+}else {
+        // Retrieve confirmed organizations and donors from local storage
+        const confirmedOrganizations = JSON.parse(localStorage.getItem('confirmedOrganizations')) || [];
+        const confirmedDonors = JSON.parse(localStorage.getItem('confirmedDonors')) || [];
+
+        // Check if the entered credentials match any confirmed organization
+        const matchedOrganization = confirmedOrganizations.find(org => org.orgEmail === email && org.orgPassword === password);
+        
+        // Check if the entered credentials match any confirmed donor
+        const matchedDonor = confirmedDonors.find(donor => donor.email === email && donor.password === password);
+
+        // If the entered credentials match a confirmed organization
+        if (matchedOrganization) {
+    if (matchedOrganization.orgType === 'orphanage') {
+        // Redirect to the donation posting HTML page for orphanage organizations
+        window.location.href = 'AfterLogin.html';
+    } else if (matchedOrganization.orgType === 'church') {
+        // Redirect to the medical posting HTML page for medical organizations
+        window.location.href = 'AfterLogin.html';
+    } else if (matchedOrganization.orgType === 'mosque') {
+        // Redirect to the teaching posting HTML page for teaching organizations
+        window.location.href = 'AfterLogin.html';
+    }
+    else if (matchedOrganization.orgType === 'hospital') {
+        // Redirect to the teaching posting HTML page for teaching organizations
+        window.location.href = 'AfterLogin.html';
+    }
+    else if (matchedOrganization.orgType === 'public school') {
+        // Redirect to the teaching posting HTML page for teaching organizations
+        window.location.href = 'AfterLogin.html';
+    }
+    else if (matchedOrganization.orgType === 'charity') {
+        // Redirect to the teaching posting HTML page for teaching organizations
+        window.location.href = 'AfterLogin.html';
+    }
+}
+        // If the entered credentials match a confirmed donor
+        else if (matchedDonor) {
+    if (matchedDonor.type === 'teacher') {
+        // Redirect to viewteaching.html for teacher donors
+        window.location.href = 'DonorOrTeacher.html';
+    } else if (matchedDonor.type === 'doctor') {
+        // Redirect to viewmedical.html for doctor donors
+        window.location.href = 'DonorOrDoctor.html';
+    } else if (matchedDonor.type === 'Regular Donor') {
+        // Redirect to viewdonations.html for regular donors
+        window.location.href = 'ManagaDonationPosts.html';
+    }
+}
+        // If no match found, display error message
+        else {
+            document.getElementById('errorMessage').textContent = 'Invalid credentials. Please try again.';
+        }
+    }
+}
+
+    </script>
+    
+    
+</body>
+</html>

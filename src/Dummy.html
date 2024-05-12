@@ -1,0 +1,51 @@
+<script>
+// Dummy donor data
+
+const dummyDonors = [
+    {
+        type: 'teacher',
+        name: 'John Smith',
+        email: 'john@example.com',
+        password: 'password123',
+        gender: 'male',
+        contactNumber: '1234567890',
+        address: '123 Main St',
+        area: 'Cityville',
+        governorate: 'State',
+        verificationDocument: 'verification_doc_1.pdf',
+        subjectsTeach: 'Mathematics, Science',
+        proBonoClasses: 5,
+        privateTutoring: 10
+    },
+    {
+        type: 'doctor',
+        name: 'Jane Doe',
+        email: 'jane@example.com',
+        password: 'password456',
+        gender: 'female',
+        contactNumber: '9876543210',
+        address: '456 Elm St',
+        area: 'Townsville',
+        governorate: 'State',
+        verificationDocument: 'verification_doc_2.pdf',
+        clinicLocation: '789 Oak St',
+        specialty: 'Pediatrics',
+        proBonoCases: 3
+    },
+    {
+        type: 'Regular Donor',
+        name: 'Sam Johnson',
+        email: 'sam@example.com',
+        password: 'password789',
+        gender: 'male',
+        contactNumber: '5551234567',
+        address: '789 Pine St',
+        area: 'Villageland',
+        governorate: 'State',
+        verificationDocument: 'verification_doc_3.pdf'
+    }
+];
+
+// Save dummy donor data to localStorage
+localStorage.setItem('dummyDonors', JSON.stringify(dummyDonors));
+</script>

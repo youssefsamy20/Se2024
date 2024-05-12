@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regular Donor Accepted Donation Request</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        p {
+            color: #666;
+            line-height: 1.6;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        li strong {
+            font-weight: bold;
+        }
+
+        #dashboardButton {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #4a7cff, #68e0cf);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin: 20px auto; /* Center the button horizontally and add margin at the top */
+}
+
+#dashboardButton:hover {
+    background: linear-gradient(135deg, #70a1ff, #7ee5b8);
+    transform: translateY(-2px);
+}
+      </style>
+      <div style="text-align: center; margin-top: 20px;">
+         <button id="dashboardButton" onclick="navigateToDashboard()">Go to Dashboard</button>
+     </div>
+</head>
+<body>
+    <div class="container">
+        <h1>Regular Donor Accepted Donation Request</h1>
+        <div id="regularDonorDetails">
+            <!-- Regular donor details will be displayed here -->
+        </div>
+        <p>The regular donor has accepted your donation request and will be available.</p>
+    </div>
+
+    <script>
+           function navigateToDashboard() {
+        window.location.href = 'DonorDashboard.html';
+    }
+        // Dummy regular donor data
+        const regularDonorData = {
+            name: 'Sam Johnson',
+            email: 'sam@example.com',
+            contactNumber: '5551234567',
+            address: '789 Pine St',
+            area: 'Villageland',
+            governorate: 'State'
+        };
+
+        // Display regular donor details
+        const regularDonorDetails = document.getElementById('regularDonorDetails');
+        regularDonorDetails.innerHTML += `
+            <ul>
+                <li><strong>Name:</strong> ${regularDonorData.name}</li>
+                <li><strong>Email:</strong> ${regularDonorData.email}</li>
+                <li><strong>Contact Number:</strong> ${regularDonorData.contactNumber}</li>
+                <li><strong>Address:</strong> ${regularDonorData.address}</li>
+                <li><strong>Area:</strong> ${regularDonorData.area}</li>
+                <li><strong>Governorate:</strong> ${regularDonorData.governorate}</li>
+            </ul>
+        `;
+    </script>
+</body>
+</html>

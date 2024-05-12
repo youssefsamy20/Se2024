@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fulfilled Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #dc3545;
+        }
+        .donation-item {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .donation-item:hover {
+            transform: translateY(-5px);
+        }
+        .donation-category {
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+        .donation-details {
+            list-style-type: none;
+            padding: 0;
+        }
+        .donation-details li {
+            margin-bottom: 10px;
+        }
+        .delete-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            line-height: 30px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+        #dashboardButton {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ffdb4a, #e09e68);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto; /* Center the button horizontally and add margin at the top */
+        }
+
+        #dashboardButton:hover {
+            background: linear-gradient(135deg, #fffa70, #c4e57e);
+            transform: translateY(-2px);
+        }
+    </style>
+<div style="text-align: center; margin-top: 20px;">
+    <button id="dashboardButton" onclick="navigateToDashboard()">Go to Dashboard</button>
+</div>
+</head>
+<body>
+   
+    <h1>Fulfilled Posts</h1>
+    <ul id="medicalDonationsList"></ul>
+
+    <script>
+       function navigateToDashboard() {
+    // Add your logic to redirect to the dashboard page
+    window.location.href = 'dashboard.html'; // Replace 'dashboard.html' with your actual dashboard page URL
+}
+        document.addEventListener('DOMContentLoaded', function() {
+            var fulfilledPosts = [
+                {
+                    category: 'medical_supplies',
+                    medicalSupplyType: 'Face Masks',
+                    deviceType: 'N95',
+                    use: 'COVID-19 Protection',
+                    medicalQuantity: '100',
+                    moreInfo: 'Urgently needed'
+                },
+                {
+                    category: 'medical_supplies',
+                    medicalSupplyType: 'Hand Sanitizer',
+                    deviceType: 'Gel',
+                    use: 'Hand Hygiene',
+                    medicalQuantity: '50',
+                    moreInfo: 'Alcohol-based preferred'
+                },
+                {
+                    category: 'medical_case',
+                    patientName: 'John Doe',
+                    patientAge: '35',
+                    patientGender: 'Male',
+                    patientWeight: '70',
+                    patientAddress: '123 Main St, Cityville',
+                    organizationName: 'City Hospital',
+                    medicalSpecialty: 'Cardiology',
+                    caseDescription: 'Heart condition, needs surgery',
+                    moreInfo: 'Emergency case'
+                },
+                {
+                    category: 'medical_case',
+                    patientName: 'Jane Smith',
+                    patientAge: '45',
+                    patientGender: 'Female',
+                    patientWeight: '60',
+                    patientAddress: '456 Elm St, Townsville',
+                    organizationName: 'Town Clinic',
+                    medicalSpecialty: 'Oncology',
+                    caseDescription: 'Cancer treatment, chemotherapy',
+                    moreInfo: 'Urgent treatment required'
+                },
+                {
+                    category: 'blood_donations',
+                    bloodType: 'O+',
+                    hospitalName: 'Regional Hospital',
+                    hospitalArea: 'Emergency Ward',
+                    governorate: 'City Center',
+                    hospitalAddress: '789 Oak St, Metropolis',
+                    moreInfo: 'Blood needed for surgery'
+                },
+                {
+                    category: 'blood_donations',
+                    bloodType: 'A-',
+                    hospitalName: 'City Hospital',
+                    hospitalArea: 'Blood Bank',
+                    governorate: 'Eastside',
+                    hospitalAddress: '101 Pine St, Downtown',
+                    moreInfo: 'Blood urgently required'
+                },
+                {
+                    category: 'blood_donations',
+                    bloodType: 'AB+',
+                    hospitalName: 'Community Clinic',
+                    hospitalArea: 'Intensive Care Unit',
+                    governorate: 'Westside',
+                    hospitalAddress: '222 Maple St, Suburbia',
+                    moreInfo: 'Blood donation drive'
+                }
+            ];
+
+            var medicalDonationsList = document.getElementById('medicalDonationsList');
+
+            fulfilledPosts.forEach(function(donation, index) {
+                var listItem = document.createElement('li');
+                listItem.classList.add('donation-item');
+                var donationDetails = document.createElement('ul');
+                donationDetails.classList.add('donation-details');
+
+                // Add donation category
+                var categoryItem = document.createElement('li');
+                categoryItem.classList.add('donation-category');
+                categoryItem.textContent = donation.category.replace('_', ' ');
+                donationDetails.appendChild(categoryItem);
+
+                for (var key in donation) {
+                    if (key !== 'category' && key !== 'moreInfo') {
+                        var detailItem = document.createElement('li');
+                        detailItem.textContent = key.replace(/([a-z])([A-Z])/g, '$1 $2') + ': ' + donation[key];
+                        donationDetails.appendChild(detailItem);
+                    }
+                }
+
+                var deleteButton = document.createElement('button');
+                deleteButton.classList.add('delete-button');
+                deleteButton.textContent = 'X';
+                listItem.appendChild(deleteButton);
+
+                listItem.appendChild(donationDetails);
+                medicalDonationsList.appendChild(listItem);
+
+                deleteButton.addEventListener('click', function() {
+                    // Remove the deleted post from the array
+                    fulfilledPosts.splice(index, 1);
+                    // Update the UI
+                    medicalDonationsList.removeChild(listItem);
+                    // Update local storage
+                    localStorage.setItem('fulfilledPosts', JSON.stringify(fulfilledPosts));
+                });
+            });
+
+            // Store fulfilled posts in local storage
+            localStorage.setItem('fulfilledPosts', JSON.stringify(fulfilledPosts));
+        });
+    </script>
+</body>
+</html>

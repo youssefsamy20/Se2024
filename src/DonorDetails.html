@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        .donor-info {
+            margin-bottom: 20px;
+        }
+        .donor-info p {
+            margin: 5px 0;
+        }
+        .additional-fields {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+        }
+        .additional-fields p {
+            margin: 5px 0;
+        }
+        #dashboardButton {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4a7cff, #68e0cf);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto; /* Center the button horizontally and add margin at the top */
+        }
+
+        #dashboardButtonn:hover {
+            background: linear-gradient(135deg, #70a1ff, #7ee5b8);
+            transform: translateY(-2px);
+        }
+        #dashboardButtonn {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #bc662d, #e09c68);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin: 20px auto; /* Center the button horizontally and add margin at the top */
+}
+
+#dashboardButton:hover {
+    background: linear-gradient(135deg, #e0ff70, #7ee5b8);
+    transform: translateY(-2px);
+}
+    </style>
+     <button id="dashboardButton" onclick="navigateTo('dashboard.html')">Go to Organisations Dashboard</button>
+     <div style="text-align: center; margin-top: 20px;">
+        <button id="dashboardButtonn" onclick="navigateToDashboard()">Go to Donors Dashboard</button>
+    </div>
+</head>
+<body>
+    <div class="container">
+        <h1>Donor Details</h1>
+        <div class="donor-info">
+            <p><strong>Type:</strong> <span id="donorType"></span></p>
+            <p><strong>Name:</strong> <span id="donorName"></span></p>
+            <p><strong>Email:</strong> <span id="donorEmail"></span></p>
+            <p><strong>Gender:</strong> <span id="donorGender"></span></p>
+            <p><strong>Contact Number:</strong> <span id="donorContactNumber"></span></p>
+            <p><strong>Address:</strong> <span id="donorAddress"></span></p>
+            <p><strong>Area:</strong> <span id="donorArea"></span></p>
+            <p><strong>Governorate:</strong> <span id="donorGovernorate"></span></p>
+        </div>
+        <div class="additional-fields" id="additionalFields">
+            <!-- Additional fields based on donor type will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        // Retrieve selected donor from localStorage
+        const donor = JSON.parse(localStorage.getItem('selectedDonor'));
+
+        // Display donor details
+        document.getElementById('donorType').textContent = donor.type;
+        document.getElementById('donorName').textContent = donor.name;
+        document.getElementById('donorEmail').textContent = donor.email;
+        document.getElementById('donorGender').textContent = donor.gender;
+        document.getElementById('donorContactNumber').textContent = donor.contactNumber;
+        document.getElementById('donorAddress').textContent = donor.address;
+        document.getElementById('donorArea').textContent = donor.area;
+        document.getElementById('donorGovernorate').textContent = donor.governorate;
+
+        // Function to generate HTML for additional fields based on donor type
+        function generateAdditionalFields(donor) {
+            let additionalFieldsHTML = '';
+            if (donor.type === 'doctor') {
+                additionalFieldsHTML += `
+                    <p><strong>Clinic Location:</strong> ${donor.clinicLocation}</p>
+                    <p><strong>Specialty:</strong> ${donor.specialty}</p>
+                    <p><strong>Pro-Bono Cases:</strong> ${donor.proBonoCases}</p>
+                `;
+            } else if (donor.type === 'teacher') {
+                additionalFieldsHTML += `
+                    <p><strong>Subjects I Can Teach:</strong> ${donor.subjectsTeach}</p>
+                    <p><strong>Pro-Bono Classes:</strong> ${donor.proBonoClasses}</p>
+                    <p><strong>Private Tutoring Sessions:</strong> ${donor.privateTutoring}</p>
+                `;
+            }
+            return additionalFieldsHTML;
+        }
+
+        // Display additional fields based on donor type
+        document.getElementById('additionalFields').innerHTML = generateAdditionalFields(donor);
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+        function navigateToDashboard() {
+        window.location.href = 'DonorDashboard.html';
+    }
+    </script>
+</body>
+</html>

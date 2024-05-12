@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Notification</title>
+    <style>
+        /* Updated CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Light gray background */
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff; /* White container background */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333333; /* Dark gray text */
+        }
+        .notification-message {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: #666666; /* Slightly darker gray text */
+        }
+        .back-to-dashboard {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007bff; /* Blue background color */
+            color: #fff; /* White text color */
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease; /* Smooth color transition */
+        }
+        .back-to-dashboard:hover {
+            background-color: #0056b3; /* Darker shade of blue on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registration Notification</h1>
+        <p class="notification-message">Please wait to be approved by the admin.</p>
+        <a href="adminDash.html" class="back-to-dashboard">Back to Dashboard</a>
+    </div>
+    <script>
+        // Function to get the donor type of the last registered donor from localStorage and redirect accordingly
+        function redirectAfterRegistration() {
+            const registeredDonors = JSON.parse(localStorage.getItem('registeredDonors')) || [];
+            const lastDonor = registeredDonors[registeredDonors.length - 1];
+            if (lastDonor) {
+                switch (lastDonor.type) {
+                    case 'teacher':
+                        window.location.href = 'RecieveTeachingPosts.html';
+                        break;
+                    case 'doctor':
+                        window.location.href = 'RecieveMedicalPosts.html';
+                        break;
+                    
+                    default:
+                        // Redirect to dashboard if donor type is not recognized
+                        window.location.href = 'ManagaDonationPosts.html';
+                        break;
+                }
+            } else {
+                // Redirect to dashboard if no donor found
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Call the redirectAfterRegistration function after 5 seconds
+        setTimeout(redirectAfterRegistration, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Registration</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+        #mapContainer {
+            display: none;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        #map {
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Donor Registration</h1>
+        <label for="donorType">Select Donor Type:</label>
+        <select id="donorType" required>
+            <option value="teacher">Teacher</option>
+            <option value="doctor">Doctor</option>
+            <option value="Regular Donor">Regular Donor</option>
+        </select><br><br>
+        
+        <label for="donorName">Donor Name:</label>
+        <input id="donorName" type="text" required><br><br>
+        
+        <label for="contactEmail">Contact Email:</label>
+        <input id="contactEmail" type="email" required><br><br>
+        
+        <label for="donorPassword">Password:</label>
+        <input id="donorPassword" type="password" required><br><br>
+
+        <label for="repeatPassword">Repeat Password:</label>
+        <input id="repeatPassword" type="password" required><br><br>
+        
+        <!-- Additional fields for registration -->
+        <label for="gender">Gender:</label>
+        <select id="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select><br><br>
+
+        <label for="contactNumber">Contact Number:</label>
+        <input id="contactNumber" type="text" required><br><br>
+
+        <label for="address">Address:</label>
+        <input id="address" type="text" required><br><br>
+
+        <label for="area">Area:</label>
+        <input id="area" type="text" required><br><br>
+
+        <label for="governorate">Governorate:</label>
+        <input id="governorate" type="text" required><br><br>
+
+        <div id="clinicFields" style="display: none;">
+            <label for="clinicLocation">Clinic Location:</label>
+            <input id="clinicLocation" type="text" required><br><br>
+
+            <label for="specialty">Specialty:</label>
+            <input id="specialty" type="text" required><br><br>
+
+            <label for="proBonoCases">Pro-Bono Cases:</label>
+            <input id="proBonoCases" type="number" required><br><br>
+        </div>
+
+        <div id="teachingFields" style="display: none;">
+            <label for="subjectsTeach">Subjects I can Teach:</label>
+            <input id="subjectsTeach" type="text" required><br><br>
+
+            <label for="proBonoClasses">Pro-Bono Classes:</label>
+            <input id="proBonoClasses" type="number" required><br><br>
+
+            <label for="privateTutoring">Private Tutoring Sessions:</label>
+            <input id="privateTutoring" type="number" required><br><br>
+        </div>
+
+        <label for="verificationDocument">JOB LICENSE AND DEGREE</label>
+        <input id="verificationDocument" type="file" required accept=".pdf, .doc, .docx"><br><br>
+        
+        <div id="mapContainer">
+            <div id="map"></div>
+        </div>
+        <!-- End of additional fields -->
+
+        <button onclick="register()">Create Account</button>
+        
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+    
+    <script>
+        // Retrieve donor details from localStorage
+        let registeredDonors = JSON.parse(localStorage.getItem('registeredDonors')) || [];
+
+        // Initialize map
+        let map;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 30.0444, lng: 31.2357}, // Coordinates for Cairo
+                zoom: 12
+            });
+
+            map.addListener('click', function(event) {
+                placeMarker(event.latLng);
+            });
+        }
+
+        function placeMarker(location) {
+            const marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+
+            // Store the location in localStorage
+            localStorage.setItem('clinicLocation', JSON.stringify({lat: location.lat(), lng: location.lng()}));
+        }
+
+        function register() {
+            const donorType = document.getElementById('donorType').value;
+            const donorName = document.getElementById('donorName').value;
+            const contactEmail = document.getElementById('contactEmail').value;
+            const password = document.getElementById('donorPassword').value;
+
+            // Additional fields
+            const gender = document.getElementById('gender').value;
+            const contactNumber = document.getElementById('contactNumber').value;
+            const address = document.getElementById('address').value;
+            const area = document.getElementById('area').value;
+            const governorate = document.getElementById('governorate').value;
+            const verificationDocument = document.getElementById('verificationDocument').files[0];
+    
+            if (donorType && donorName && contactEmail && password && gender && contactNumber && address && area && governorate) {
+                // Create a new donor object
+                const donor = {
+                    type: donorType,
+                    name: donorName,
+                    email: contactEmail,
+                    password: password,
+                    gender: gender,
+                    contactNumber: contactNumber,
+                    address: address,
+                    area: area,
+                    governorate: governorate,
+                    verificationDocument: verificationDocument.name
+                };
+
+                if (donorType === 'doctor') {
+                    const clinicLocation = document.getElementById('clinicLocation').value;
+                    const specialty = document.getElementById('specialty').value;
+                    const proBonoCases = document.getElementById('proBonoCases').value;
+                    donor.clinicLocation = clinicLocation;
+                    donor.specialty = specialty;
+                    donor.proBonoCases = proBonoCases;
+                } else if (donorType === 'teacher') {
+                    const subjectsTeach = document.getElementById('subjectsTeach').value;
+                    const proBonoClasses = document.getElementById('proBonoClasses').value;
+                    const privateTutoring = document.getElementById('privateTutoring').value;
+                    donor.subjectsTeach = subjectsTeach;
+                    donor.proBonoClasses = proBonoClasses;
+                    donor.privateTutoring = privateTutoring;
+                }
+    
+                // Push the new donor object to the array
+                registeredDonors.push(donor);
+    
+                // Save the updated array to localStorage
+                localStorage.setItem('registeredDonors', JSON.stringify(registeredDonors));
+
+                if (donorType === 'doctor') {
+                    // Redirect to the managedonationposts.html after successful registration
+                    window.location.href = 'notification2.html';
+                } else if (donorType === 'teacher') {
+                    // Redirect to the teacher's page for specifying teaching details
+                    window.location.href = 'notification2.html';
+                } else {
+                    // Redirect to the admin dashboard page after successful registration
+                    window.location.href = 'notification2.html';
+                }
+            } else {
+                // Display error message for missing fields
+                document.getElementById('errorMessage').textContent = 'Please fill out all fields.';
+            }
+        }
+
+        // Toggle map display and clinic fields when selecting doctor type
+        document.getElementById('donorType').addEventListener('change', function() {
+            const mapContainer = document.getElementById('mapContainer');
+            const clinicFields = document.getElementById('clinicFields');
+            const teachingFields = document.getElementById('teachingFields');
+            if (this.value === 'doctor') {
+                mapContainer.style.display = 'block';
+                clinicFields.style.display = 'block';
+                teachingFields.style.display = 'none';
+                initMap(); // Initialize map when doctor is selected
+            } else if (this.value === 'teacher') {
+                mapContainer.style.display = 'none';
+                clinicFields.style.display = 'none';
+                teachingFields.style.display = 'block';
+            } else {
+                mapContainer.style.display = 'none';
+                clinicFields.style.display = 'none';
+                teachingFields.style.display = 'none';
+            }
+        });
+    </script>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4x9KD9_ecTbberyIO4vLzj7FUjxewxss&callback=initMap" async defer></script>
+</body>
+</html>

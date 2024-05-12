@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Supplies & Teaching Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        .donation-post {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        .donation-post h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+        }
+        .donation-form input[type="text"] {
+            width: calc(100% - 22px); /* Adjust for padding and border */
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .action-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .dashboard-button {
+            background-color: #6735dc;
+            color: #fff;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .dashboard-button:hover {
+            background-color: #390ad1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>School Supplies & Teaching Posts</h1>
+        <div id="donationPosts"></div>
+        <div class="action-buttons">
+            <button class="dashboard-button" onclick="redirectToDashboard()">Go to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        var donationPosts = JSON.parse(localStorage.getItem('donationPosts')) || [];
+        displaySchoolAndTeachingPosts();
+
+        function displaySchoolAndTeachingPosts() {
+            const donationPostsContainer = document.getElementById('donationPosts');
+            donationPostsContainer.innerHTML = '';
+            donationPosts.filter(post => post.category === 'school_supplies' || post.category === 'teaching')
+                .forEach((post, index) => {
+                    const postDiv = document.createElement('div');
+                    postDiv.classList.add('donation-post');
+                    postDiv.innerHTML = generatePostHTML(post, index);
+                    donationPostsContainer.appendChild(postDiv);
+                });
+        }
+
+        function generatePostHTML(post, index) {
+            let detailsHtml = '';
+            Object.entries(post).forEach(([key, value]) => {
+                if (key !== 'category' && key !== 'moreInfo') {
+                    detailsHtml += `
+                        <p>${key}: ${value}</p>
+                    `;
+                }
+            });
+
+            return `
+                <h2>Category: ${post.category}</h2>
+                <p>Details: ${post.moreInfo}</p>
+                ${detailsHtml}
+                <button onclick="editPost(${index})">Edit</button>
+                <button onclick="deletePost(${index})">Delete</button>
+            `;
+        }
+
+        function editPost(index) {
+            const post = donationPosts[index];
+            const postDiv = document.querySelectorAll('.donation-post')[index];
+            let detailsHtml = '';
+            Object.entries(post).forEach(([key, value]) => {
+                if (key !== 'category' && key !== 'moreInfo') {
+                    detailsHtml += `
+                        <label>${key}: </label>
+                        <input type="text" id="${key}-${index}" value="${value}" /><br>
+                    `;
+                }
+            });
+
+            postDiv.innerHTML = `
+                <h2>Category: ${post.category}</h2>
+                <p>Details: ${post.moreInfo}</p>
+                ${detailsHtml}
+                <button onclick="saveChanges(${index})">Save Changes</button>
+                <button onclick="cancelEdit(${index})">Cancel</button>
+            `;
+        }
+
+        function saveChanges(index) {
+            const post = donationPosts[index];
+            Object.keys(post).forEach(key => {
+                if (key !== 'category' && key !== 'moreInfo') { 
+                    const inputElement = document.getElementById(`${key}-${index}`);
+                    if (inputElement) {
+                        post[key] = inputElement.value;
+                    }
+                }
+            });
+            localStorage.setItem('donationPosts', JSON.stringify(donationPosts));
+            displaySchoolAndTeachingPosts(); // Refresh display
+        }
+
+        function cancelEdit(index) {
+            displaySchoolAndTeachingPosts(); // Refresh display without saving changes
+        }
+        function redirectToDashboard() {
+            // Add your logic to redirect to the dashboard page
+            window.location.href = 'dashboard.html'; // Replace 'dashboard.html' with your actual dashboard page URL
+        }
+
+        function deletePost(index) {
+            donationPosts.splice(index, 1);
+            localStorage.setItem('donationPosts', JSON.stringify(donationPosts));
+            displaySchoolAndTeachingPosts(); // Refresh display
+        }
+
+        function showNotificationForLastPost() {
+            const schoolAndTeachingPosts = donationPosts.filter(post => 
+                post.category === 'school_supplies' || 
+                post.category === 'teaching'
+            );
+            if (schoolAndTeachingPosts.length > 0) {
+                const lastPost = schoolAndTeachingPosts[schoolAndTeachingPosts.length - 1];
+                setTimeout(function() {
+                    showMessage(lastPost);
+                }, 5000);
+            }
+        }
+
+        function showMessage(post) {
+            var message = document.createElement('div');
+            message.classList.add('message');
+            message.textContent = 'A donor has accepted your offer for the following post: ';
+            var postDetails = document.createElement('div');
+            postDetails.innerHTML = `
+                <h2>Category: ${post.category}</h2>
+                <p>Details: ${post.moreInfo}</p>
+                ${getAdditionalDetails(post)}
+                <button onclick="schedulePickup()">Schedule Pickup</button>
+            `;
+            
+            // Add a button based on the category of the last post
+            var button;
+            if (post.category === 'school_supplies') {
+                button = document.createElement('button');
+                button.textContent = 'View Donor Details';
+                button.onclick = function() {
+                    window.location.href = 'RegularDonor.html';
+                };
+            } else if (post.category === 'teaching') {
+                button = document.createElement('button');
+                button.textContent = 'View Teacher Details';
+                button.onclick = function() {
+                    window.location.href = 'Teachers.html';
+                };
+            }
+            
+            if (button) {
+                postDetails.appendChild(button);
+            }
+            
+            message.appendChild(postDetails);
+            document.body.appendChild(message);
+        }
+
+        function getAdditionalDetails(post) {
+            var detailsHtml = '';
+            for (var key in post) {
+                if (key !== 'category' && key !== 'moreInfo') {
+                    detailsHtml += `<p>${key}: ${post[key]}</p>`;
+                }
+            }
+            return detailsHtml;
+        }
+
+        function schedulePickup() {
+            // Add your logic to schedule pickup here
+            // For example, you could redirect to a pickup scheduling page
+            window.location.href = 'OrgPickup.html';
+        }
+
+        // Call the function to show notification for the last post
+        showNotificationForLastPost();
+    </script>
+</body>
+</html>

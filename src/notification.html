@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Pending</title>
+    <style>
+        /* Updated CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9; /* Light gray background */
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: #ffffff; /* White background */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            text-align: center;
+        }
+        h1 {
+            color: #333333; /* Dark gray heading */
+            margin-bottom: 20px;
+        }
+        p {
+            color: #555555; /* Dark gray text */
+            margin-bottom: 30px;
+        }
+        .loader {
+            border: 4px solid #f3f3f3; /* Light gray border */
+            border-top: 4px solid #3498db; /* Blue border for loader animation */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite; /* Loader animation */
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registration Pending</h1>
+        <p>Your organization registration is pending approval from the admin. Please wait for approval.</p>
+        <div class="loader"></div> <!-- Loader animation -->
+    </div>
+    
+    <script>
+       const registeredOrganizations = JSON.parse(localStorage.getItem('registeredOrganizations'));
+console.log("Registered Organizations:", registeredOrganizations);
+const organization = registeredOrganizations ? registeredOrganizations[registeredOrganizations.length - 1].orgType : null;
+console.log("Organization Type:", organization);
+
+// Simulate acceptance
+setTimeout(() => {
+    console.log("Redirecting...");
+    // Redirect to appropriate page based on organization type
+    switch (organization) {
+        case 'orphanage':
+        case 'church':
+        case 'mosque':
+        case 'charity':
+            window.location.href = 'AfterOrgReg.html';
+            break;
+        case 'hospital':
+            window.location.href = 'AfterOrgReg.html';
+            break;
+        case 'public school':
+            window.location.href = 'AfterOrgReg.html';
+            break;
+        default:
+            // Redirect to a default page or handle error
+            console.log("Unknown organization type:", organization);
+            break;
+    }
+}, 5000); // Redirect after 5 seconds (5000 milliseconds)
+    </script>
+</body>
+</html>

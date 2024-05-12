@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Donation Posts</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7; /* Light gray background */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff; /* White container background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for container */
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff; /* Blue heading color */
+        }
+
+        /* Donation post styles */
+        .donation-post {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px; /* Increased margin between donation posts */
+            background-color: #fff; /* White background */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow for donation posts */
+        }
+
+        .donation-post h2 {
+            margin-top: 0;
+            color: #333; /* Dark heading color */
+        }
+
+        /* Button styles */
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Input styles */
+        input[type="text"] {
+            width: calc(100% - 20px); /* Adjusted input width */
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Notification styles */
+        .notification {
+            border: 1px solid #007bff; /* Blue border */
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px; /* Increased margin */
+            background-color: #f0f9ff; /* Light blue background */
+        }
+
+        .notification h2 {
+            color: #007bff; /* Blue text color */
+        }
+
+        .notification button {
+            background-color: #007bff; /* Blue button background color */
+        }
+
+        .notification button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Dashboard button */
+        #dashboardButton {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4a7cff, #68e0cf);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto; /* Center the button horizontally and add margin at the top */
+        }
+
+        #dashboardButton:hover {
+            background: linear-gradient(135deg, #70a1ff, #7ee5b8);
+            transform: translateY(-2px);
+        }
+    </style>
+    <button id="dashboardButton" onclick="navigateTo('dashboard.html')">Go to Dashboard</button>
+<body>
+    <div class="container">
+        <h1>Manage Donation Posts</h1>
+        <div id="donationPosts"></div>
+        <div id="notification"></div> 
+        
+    </div>
+    <script>
+        var donationPosts = JSON.parse(localStorage.getItem('donationPosts')) || [];
+        displayDonationPosts();
+        function getAdditionalDetails(post) {
+            var detailsHtml = '';
+            for (var key in post) {
+                if (key !== 'category' && key !== 'moreInfo') {
+                    detailsHtml += `<p>${key}: ${post[key]}</p>`;
+                }
+            }
+            return detailsHtml;
+        }
+        function showNotification(post) {
+        var notificationDiv = document.getElementById('notification');
+        var notificationMessage = document.createElement('div');
+        notificationMessage.classList.add('notification');
+        notificationMessage.innerHTML = `
+            A donor has accepted your offer for the following post:
+            <h2>Category: ${post.category}</h2>
+            <p>Details: ${post.moreInfo}</p>
+            ${getAdditionalDetails(post)}
+            <button onclick="schedulePickup()">Schedule Pickup</button>
+            <button onclick="viewDonorDetails()">View Donor Details</button> <!-- Add this button -->
+        `;
+        notificationDiv.appendChild(notificationMessage);
+    }
+    function viewDonorDetails(category) {
+            if (category === 'medical_case') {
+                window.location.href = 'doctor.html';
+            } else {
+                window.location.href = 'RegularDonor.html';
+            }
+        }
+function navigateTo(page) {
+            window.location.href = page;
+        }
+
+       
+
+        function schedulePickup() {
+            // Add your logic to schedule pickup here
+            // For example, you could redirect to a pickup scheduling page
+            window.location.href = 'OrgPickup.html';
+        }
+        function displayDonationPosts() {
+    var donationPostsContainer = document.getElementById('donationPosts');
+    donationPostsContainer.innerHTML = '';
+    donationPosts.forEach(function(post, index) {
+        var postDiv = document.createElement('div');
+        postDiv.classList.add('donation-post');
+        var detailsHtml = '';
+        
+        // Construct HTML based on post category
+        switch (post.category) {
+            case 'clothes':
+                detailsHtml = `
+                    <p>Clothes Size: ${post.clothesSize}</p>
+                    <p>Age: ${post.clothesAge}</p>
+                    <p>Gender: ${post.clothesGender}</p>
+                    <p>Season: ${post.season}</p>
+                    <p>Material:${post.material}</p>
+                    <p>Quantity: ${post.clothesQuantity}</p>
+                `;
+                break;
+            case 'toys':
+                detailsHtml = `
+                    <p>Age: ${post.toyAge}</p>
+                    <p>Gender: ${post.toyGender}</p>
+                    <p>Toy Category: ${post.toyCategory}</p>
+                    <p>Quantity: ${post.toyQuantity}</p>
+                `;
+                break;
+            case 'food':
+                detailsHtml = `
+                    <p>Food Type: ${post.foodType}</p>
+                    <p>Quantity: ${post.foodQuantity}</p>
+                `;
+                break;
+            case 'medical_supplies':
+                detailsHtml = `
+                    <p>Medical Supply Type: ${post.medicalSupplyType}</p>
+                    <p>Device Type: ${post.deviceType}</p>
+                    <p>Use: ${post.use}</p>
+                    <p>Quantity: ${post.medicalQuantity}</p>
+                    <p>Image: ${post.image}</p>
+                `;
+                break;
+                case 'medical_case':
+                detailsHtml = `
+                ${getAdditionalDetails(post)}
+                `;
+                break;
+                case 'teaching':
+                detailsHtml = `
+                ${getAdditionalDetails(post)}
+                `;
+                break;
+                case 'school_supplies':
+                    if (post.supplyType === 'books') {
+                        detailsHtml = `
+                           
+                            <p>Author: ${post.author}</p>
+                            
+                            
+                            ${getAdditionalDetails(post)}
+                        `;
+                    } else if (post.supplyType === 'stationary') {
+                        detailsHtml = `
+                           
+                           
+                            
+                            ${getAdditionalDetails(post)}
+                        `;
+                    } else {
+                        detailsHtml = `
+                            <p>Supply Type: ${post.supplyType}</p>
+                            <p>Quantity: ${post.SchoolQuantity}</p>
+                            ${getAdditionalDetails(post)}
+                        `;
+                    }
+                    break;
+            case 'blood_donations':
+                detailsHtml = `
+                    <p>Patient Name: ${post.patientName}</p>
+                    <p>Blood Type: ${post.bloodType}</p>
+                    <p>Hospital Name: ${post.hospitalName}</p>
+                    <p>Hospital Area: ${post.hospitalArea}</p>
+                    <p>Governorate: ${post.governorate}</p>
+                    <p>Hospital Address: ${post.hospitalAddress}</p>
+                `;
+                break;
+            default:
+                detailsHtml = `<p>No specific details available.</p>`;
+                break;
+        }
+
+        postDiv.innerHTML = `
+            <h2>Category: ${post.category}</h2>
+            <p>Details: ${post.moreInfo}</p>
+            ${detailsHtml}
+            <button onclick="editPost(${index})">Edit</button>
+            <button onclick="deletePost(${index})">Delete</button>
+        `;
+        
+        donationPostsContainer.appendChild(postDiv);
+        if (index === donationPosts.length - 1) {
+    // Add a delay of 5 seconds before showing the notification for the last post
+    setTimeout(function() {
+        showNotification(post);
+    }, 5000);
+
+        }
+         });
+}
+
+function editPost(index) {
+    var post = donationPosts[index];
+    var postDiv = document.getElementsByClassName('donation-post')[index];
+    var detailsHtml = '';
+
+    switch (post.category) {
+        case 'clothes':
+            detailsHtml = `
+                <p>Clothes Size: <input type="text" name="clothesSize" value="${post.clothesSize}"></p>
+                <p>Age: <input type="text" name="clothesAge" value="${post.clothesAge}"></p>
+                <p>Gender: <input type="text" name="clothesGender" value="${post.clothesGender}"></p>
+                <p>Season: <input type="text" name="season" value="${post.season}"></p>
+                <p>Material: <input type="text" name="material" value="${post.material}"></p>
+                <p>Quantity: <input type="text" name="clothesQuantity" value="${post.clothesQuantity}"></p>
+            `;
+            break;
+        case 'toys':
+            detailsHtml = `
+                <p>Age: <input type="text" name="toyAge" value="${post.toyAge}"></p>
+                <p>Gender: <input type="text" name="toyGender" value="${post.toyGender}"></p>
+                <p>Toy Category: <input type="text" name="toyCategory" value="${post.toyCategory}"></p>
+                <p>Quantity: <input type="text" name="toyQuantity" value="${post.toyQuantity}"></p>
+            `;
+            break;
+        case 'food':
+            detailsHtml = `
+                <p>Food Type: <input type="text" name="foodType" value="${post.foodType}"></p>
+                <p>Quantity: <input type="text" name="foodQuantity" value="${post.foodQuantity}"></p>
+            `;
+            break;
+        case 'medical_supplies':
+            detailsHtml = `
+                <p>Medical Supply Type: <input type="text" name="medicalSupplyType" value="${post.medicalSupplyType}"></p>
+                <p>Device Type: <input type="text" name="deviceType" value="${post.deviceType}"></p>
+                <p>Use: <input type="text" name="use" value="${post.use}"></p>
+                <p>Quantity: <input type="text" name="medicalQuantity" value="${post.medicalQuantity}"></p>
+                <p>Image: <input type="text" name="image" value="${post.image}"></p>
+            `;
+            break;
+            case 'school_supplies':
+            if (post.supplyType === 'books') {
+                detailsHtml = `
+                <p>Book Title: <input type="text" name="bookName" value="${post.bookName}"></p>
+<p>Author: <input type="text" name="author" value="${post.author}"></p>
+<p>Language: <input type="text" name="language" value="${post.language}"></p>
+<p>Edition: <input type="text" name="edition" value="${post.edition}"></p>
+<p>Summary: <input type="text" name="summary" value="${post.summary}"></p>
+<p>Image: <input type="file" name="bookImage"></p>
+<p>Quantity: <input type="text" name="SchoolQuantity" value="${post.SchoolQuantity}"></p>
+
+                    }
+                `;
+            } else if (post.supplyType === 'stationary') {
+                detailsHtml = `
+                    <p>Stationary Type: <input type="text" name="itemType" value="${post.itemType}"></p>
+<p>Details: <input type="text" name="itemDetails" value="${post.itemDetails}"></p>
+<p>Quantity: <input type="text" name="SchoolQuantity" value="${post.SchoolQuantity}"></p>
+
+                    ${getAdditionalDetails(post)}
+                `;
+            } else {
+                detailsHtml = `
+                    <p>Supply Type: <input type="text" id="supplyType" value="${post.supplyType}"></p>
+                    <p>Quantity: <input type="text" id="SchoolQuantity" value="${post.SchoolQuantity}"></p>
+                    ${getAdditionalDetails(post)}
+                `;
+            }
+            break;
+        case 'blood_donations':
+            detailsHtml = `
+                <p>Patient Name: <input type="text" name="patientName" value="${post.patientName}"></p>
+                <p>Blood Type: <input type="text" name="bloodType" value="${post.bloodType}"></p>
+                <p>Hospital Name: <input type="text" name="hospitalName" value="${post.hospitalName}"></p>
+                <p>Hospital Area: <input type="text" name="hospitalArea" value="${post.hospitalArea}"></p>
+                <p>Governorate: <input type="text" name="governorate" value="${post.governorate}"></p>
+                <p>Hospital Address: <input type="text" name="hospitalAddress" value="${post.hospitalAddress}"></p>
+            `;
+            break;
+            case 'teaching':
+            detailsHtml = `
+                <p>Subject: <input type="text" name="subject" value="${post.subject}"></p>
+                <p>Area: <input type="text" name="area" value="${post.area}"></p>
+                <p>Teaching Governorate: <input type="text" name="teachingGovernorate" value="${post.teachingGovernorate}"></p>
+            `;
+            break;
+        case 'medical_case':
+            detailsHtml = `
+                <p>Patient Name: <input type="text" name="patientName" value="${post.patientName}"></p>
+                <p>Age: <input type="number" name="patientAge" min="0" value="${post.patientAge}"></p>
+                <p>Gender: 
+                    <select name="patientGender">
+                        <option value="male" ${post.patientGender === 'male' ? 'selected' : ''}>Male</option>
+                        <option value="female" ${post.patientGender === 'female' ? 'selected' : ''}>Female</option>
+                        <option value="other" ${post.patientGender === 'other' ? 'selected' : ''}>Other</option>
+                    </select>
+                </p>
+                <p>Weight (kg): <input type="number" name="patientWeight" min="0" value="${post.patientWeight}"></p>
+                <p>Location (Google marker): <input type="text" name="patientLocation" value="${post.patientLocation}"></p>
+                <p>Address: <textarea name="patientAddress" rows="4">${post.patientAddress}</textarea></p>
+                <p>Organization Name: <input type="text" name="organizationName" value="${post.organizationName}"></p>
+                <p>Case Area: <input type="text" name="CaseArea" value="${post.CaseArea}"></p>
+                <p>Case Governorate: <input type="text" name="CaseGovernorate" value="${post.CaseGovernorate}"></p>
+                <p>Medical Specialty: <input type="text" name="medicalSpecialty" value="${post.medicalSpecialty}"></p>
+                <p>Case Description: <textarea name="caseDescription" rows="4">${post.caseDescription}</textarea></p>
+            `;
+            break;
+        default:
+            detailsHtml = `<p>No specific details available.</p>`;
+            break;
+    }
+
+    postDiv.innerHTML = `
+        <h2>Category: ${post.category}</h2>
+        <p>Details: ${post.moreInfo}</p>
+        ${detailsHtml}
+        <button onclick="saveChanges(${index})">Save Changes</button>
+        <button onclick="cancelEdit(${index})">Cancel</button>
+    `;
+}
+
+
+function saveChanges(index) {
+    var postDiv = document.getElementsByClassName('donation-post')[index];
+    var post = donationPosts[index];
+    
+    // Update post details based on input values
+    switch (post.category) {
+        case 'clothes':
+            post.clothesSize = postDiv.querySelector('[name="clothesSize"]').value;
+            post.clothesAge = postDiv.querySelector('[name="clothesAge"]').value;
+            post.clothesGender = postDiv.querySelector('[name="clothesGender"]').value;
+            post.season = postDiv.querySelector('[name="season"]').value;
+            post.material = postDiv.querySelector('[name="material"]').value;
+            post.clothesQuantity = postDiv.querySelector('[name="clothesQuantity"]').value;
+            break;
+        case 'toys':
+            post.toyAge = postDiv.querySelector('[name="toyAge"]').value;
+            post.toyGender = postDiv.querySelector('[name="toyGender"]').value;
+            post.toyCategory = postDiv.querySelector('[name="toyCategory"]').value;
+            post.toyQuantity = postDiv.querySelector('[name="toyQuantity"]').value;
+            break;
+        case 'food':
+            post.foodType = postDiv.querySelector('[name="foodType"]').value;
+            post.foodQuantity = postDiv.querySelector('[name="foodQuantity"]').value;
+            break;
+        case 'medical_supplies':
+            post.medicalSupplyType = postDiv.querySelector('[name="medicalSupplyType"]').value;
+            post.deviceType = postDiv.querySelector('[name="deviceType"]').value;
+            post.use = postDiv.querySelector('[name="use"]').value;
+            post.medicalQuantity = postDiv.querySelector('[name="medicalQuantity"]').value;
+            post.image = postDiv.querySelector('[name="image"]').value;
+            break;
+            case 'school_supplies':
+            if (post.supplyType === 'books') {
+                // Update book details
+                post.bookName = postDiv.querySelector('[name="bookName"]').value;
+                post.author = postDiv.querySelector('[name="author"]').value;
+                post.language = postDiv.querySelector('[name="language"]').value;
+                post.edition = postDiv.querySelector('[name="edition"]').value;
+                post.summary = postDiv.querySelector('[name="summary"]').value;
+                // Handle image upload logic separately if needed
+                post.SchoolQuantity = postDiv.querySelector('[name="SchoolQuantity"]').value;
+            } else if (post.supplyType === 'stationary') {
+                // Update stationary details
+                post.itemType = postDiv.querySelector('[name="itemType"]').value;
+                post.itemDetails = postDiv.querySelector('[name="itemDetails"]').value;
+                // Handle additional details for stationary if needed
+                post.SchoolQuantity = postDiv.querySelector('[name="SchoolQuantity"]').value;
+            } 
+            break;
+        case 'teaching':
+            post.subject = postDiv.querySelector('[name="subject"]').value;
+            post.area = postDiv.querySelector('[name="area"]').value;
+            post.teachingGovernorate = postDiv.querySelector('[name="teachingGovernorate"]').value;
+            break;
+        case 'blood_donations':
+            post.patientName = postDiv.querySelector('[name="patientName"]').value;
+            post.bloodType = postDiv.querySelector('[name="bloodType"]').value;
+            post.hospitalName = postDiv.querySelector('[name="hospitalName"]').value;
+            post.hospitalArea = postDiv.querySelector('[name="hospitalArea"]').value;
+            post.governorate = postDiv.querySelector('[name="governorate"]').value;
+            post.hospitalAddress = postDiv.querySelector('[name="hospitalAddress"]').value;
+            break;
+        default:
+            // No specific action needed
+            break;
+    }
+    localStorage.setItem('donationPosts', JSON.stringify(donationPosts));
+    // Re-display donation posts with updated details
+    displayDonationPosts();
+}
+
+
+function cancelEdit(index) {
+    // Simply re-display donation posts without saving changes
+    displayDonationPosts();
+}
+function deletePost(index) {
+    donationPosts.splice(index, 1); // Remove the post at the given index
+    localStorage.setItem('donationPosts', JSON.stringify(donationPosts)); // Save the updated array to local storage
+    displayDonationPosts(); // Update the display after deletion
+}
+    </script>
+</body>
+</html>

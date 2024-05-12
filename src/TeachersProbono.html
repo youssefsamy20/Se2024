@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Donation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teacher Donation</h1>
+
+        <div>
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" placeholder="Enter subject">
+        </div>
+
+        <div>
+            <label for="classes">Number of Classes:</label>
+            <input type="number" id="classes" placeholder="Enter number of classes">
+        </div>
+
+        <div>
+            <label for="students">Number of Students:</label>
+            <input type="number" id="students" placeholder="Enter number of students">
+        </div>
+
+        <button onclick="submitDonation()">Submit Donation</button>
+    </div>
+
+    <script>
+        function submitDonation() {
+            var subject = document.getElementById('subject').value.trim();
+            var classes = parseInt(document.getElementById('classes').value.trim());
+            var students = parseInt(document.getElementById('students').value.trim());
+
+            // Validation
+            if (subject === '' || isNaN(classes) || isNaN(students)) {
+                alert('Please fill in all fields with valid information.');
+                return;
+            }
+
+            // Create donation object
+            var donation = {
+                category: 'teaching',
+                subject: subject,
+                classes: classes,
+                students: students
+            };
+
+            // Get existing donation posts from localStorage or create empty array
+            var donationPosts = JSON.parse(localStorage.getItem('donationPosts')) || [];
+
+            // Add new donation to the array
+            donationPosts.push(donation);
+
+            // Save updated donation posts array back to localStorage
+            localStorage.setItem('donationPosts', JSON.stringify(donationPosts));
+
+            // Redirect to the manage donation posts page or display a confirmation message
+            window.location.href = 'manage_donation_posts.html';
+            // Alternatively, you can display a confirmation message
+            // alert('Donation submitted successfully!');
+        }
+    </script>
+</body>
+</html>

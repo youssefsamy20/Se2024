@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .dashboard-button {
+            padding: 20px 40px;
+            margin: 20px;
+            border: none;
+            border-radius: 50px;
+            background-color: #4c57af;
+            color: #fff;
+            font-size: 20px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .dashboard-button:hover {
+            transform: translateY(-5px);
+            background-color: #455fa0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Organization Dashboard</h1>
+        <div class="button-container">
+            <button class="dashboard-button" onclick="redirectToTeachingCases()">Teaching Cases</button>
+            <button class="dashboard-button" onclick="redirectToMedicalCases()">Medical Cases</button>
+            <button class="dashboard-button" onclick="redirectToFulfilledPosts()">Fulfilled Posts</button>
+            <button class="dashboard-button" onclick="redirectToLogin()">After Login</button>
+            <button class="dashboard-button" onclick="redirectToSomethingElse()">Location</button>
+            <button class="dashboard-button" onclick="redirectToAnotherPage()">All Posts</button>
+            <button class="dashboard-button" onclick="redirecttomyaccount()">My Account</button>
+            <button class="dashboard-button" onclick="redirectToTeachingPosting()">Post Teaching Posts</button>
+            <button class="dashboard-button" onclick="redirectToMedicalPosting()">Post Medical Posts</button>
+            <button class="dashboard-button" onclick="redirectToAllPosting()">Post All Categories</button>
+        </div>
+    </div>
+
+    <script>
+        function redirectToTeachingCases() {
+            window.location.href = 'TeachingCases.html';
+        }
+        function redirectToTeachingPosting() {
+            window.location.href = 'TeachingPosting.html';
+        }
+        function redirectToAllPosting() {
+            window.location.href = 'DonationPosting.html';
+        }
+        function redirectToMedicalPosting() {
+            window.location.href = 'MedicalPosting.html';
+        }
+        function redirecttomyaccount() {
+            window.location.href = 'OrganisationDetailss.html';
+        }
+        function redirectToMedicalCases() {
+            window.location.href = 'MedicalCases.html';
+        }
+
+        function redirectToFulfilledPosts() {
+            window.location.href = 'FulfilledPosts.html';
+        }
+
+        function redirectToLogin() {
+            window.location.href = 'AfterLogin.html';
+        }
+
+        function redirectToSomethingElse() {
+            window.location.href = 'map.html';
+        }
+
+        function redirectToAnotherPage() {
+            window.location.href = 'AllPosts.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Accepted Pro Bono Request</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        p {
+            color: #666;
+            line-height: 1.6;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        li strong {
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #dashboardButton {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #4a7cff, #68e0cf);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin: 20px auto; /* Center the button horizontally and add margin at the top */
+}
+
+#dashboardButton:hover {
+    background: linear-gradient(135deg, #70a1ff, #7ee5b8);
+    transform: translateY(-2px);
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Details</h1>
+        <div id="doctorDetails">
+            <!-- Doctor details will be displayed here -->
+        </div>
+        <p>The doctor has accepted your pro bono request and will be available according to the timings.</p>
+        <button onclick="updateInfo()">Update Info</button>
+        <button onclick="deleteAccount()">Delete Account</button>
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+        <button id="dashboardButton" onclick="navigateToDashboard()">Go to Dashboard</button>
+    </div>
+    <script>
+        let doctorData = JSON.parse(localStorage.getItem('doctorData')) || {
+            name: 'Jane Doe',
+            email: 'jane@example.com',
+            contactNumber: '9876543210',
+            address: '456 Elm St',
+            area: 'Townsville',
+            governorate: 'State',
+            clinicLocation: '789 Oak St',
+            specialty: 'Pediatrics',
+            proBonoCases: 3
+        };
+
+        function displayDoctorDetails() {
+            const doctorDetails = document.getElementById('doctorDetails');
+            doctorDetails.innerHTML = `
+                <ul>
+                    <li><strong>Name:</strong> ${doctorData.name}</li>
+                    <li><strong>Email:</strong> ${doctorData.email}</li>
+                    <li><strong>Contact Number:</strong> ${doctorData.contactNumber}</li>
+                    <li><strong>Address:</strong> ${doctorData.address}</li>
+                    <li><strong>Area:</strong> ${doctorData.area}</li>
+                    <li><strong>Governorate:</strong> ${doctorData.governorate}</li>
+                    <li><strong>Clinic Location:</strong> ${doctorData.clinicLocation}</li>
+                    <li><strong>Specialty:</strong> ${doctorData.specialty}</li>
+                    <li><strong>Pro Bono Cases:</strong> ${doctorData.proBonoCases}</li>
+                </ul>
+            `;
+        }
+
+        function updateInfo() {
+            const doctorDetails = document.getElementById('doctorDetails');
+            const attributes = Object.keys(doctorData);
+            attributes.forEach(attribute => {
+                const currentValue = doctorData[attribute];
+                doctorDetails.innerHTML += `
+                    <label for="${attribute}">${attribute}: </label>
+                    <input type="text" id="${attribute}" value="${currentValue}" onchange="updateValue('${attribute}', this.value)">
+                `;
+            });
+        }
+
+        function updateValue(attribute, value) {
+            doctorData[attribute] = value;
+            localStorage.setItem('doctorData', JSON.stringify(doctorData));
+            displayDoctorDetails(); // Update the displayed details
+        }
+
+        function deleteAccount() {
+            localStorage.removeItem('doctorData');
+            window.location.href = 'login.html'; // Redirect to login page
+        }
+
+        displayDoctorDetails();
+        function navigateToDashboard() {
+        window.location.href = 'DonorDashboard.html';
+    }
+    </script>
+</body>
+</html>

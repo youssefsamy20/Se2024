@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Dashboard</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS file -->
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #cfe7ff; /* Light blue background */
+        margin: 0;
+        padding: 0;
+    }
+    
+    .dashboard-container {
+        max-width: 800px;
+        margin: 50px auto;
+        text-align: center;
+    }
+    
+    h1 {
+        color: #007bff; /* Blue heading color */
+    }
+    
+    .button-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .dashboard-button {
+        padding: 15px 30px;
+        margin: 10px;
+        background-color: #007bff; /* Blue button background */
+        color: #fff;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+        transition: background-color 0.3s ease-in-out;
+    }
+    
+    .dashboard-button:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }
+</style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <h1>Welcome to Your Donor Dashboard</h1>
+        <div class="button-group">
+            <button onclick="redirectToDonorDetails()" class="dashboard-button">View My Details</button>
+            <button onclick="redirectToConfirmedOrganizations()" class="dashboard-button">View Confirmed Organizations</button>
+            <button onclick="redirectToAddressManagement()" class="dashboard-button">View My Address</button>
+            <button onclick="redirectToPostManagement()" class="dashboard-button">Manage My Posts</button>
+            <button onclick="redirectToMedicalPosts()" class="dashboard-button">View Medical Posts</button>
+            <button onclick="redirectToTeachingPosts()" class="dashboard-button">View Teaching Posts</button>
+            <button onclick="redirectToDonorDoctorDetails()" class="dashboard-button">View Doctor Details</button>
+            <button onclick="redirectToDonorTeacherDetails()" class="dashboard-button">View Teacher Details</button>
+        </div>
+    </div>
+
+    <script>
+        function redirectToDonorDetails() {
+            window.location.href = 'RegularDonorDetails.html';
+        }
+        function redirectToDonorDoctorDetails() {
+            window.location.href = 'DoctorDetails.html';
+        }
+        function redirectToDonorTeacherDetails() {
+            window.location.href = 'TeachersDetail.html';
+        }
+
+        function redirectToConfirmedOrganizations() {
+            window.location.href = 'DonorsSearchOrgs.html';
+        }
+
+        function redirectToAddressManagement() {
+            window.location.href = 'maps8.html';
+        }
+
+        function redirectToPostManagement() {
+            window.location.href = 'ManagaDonationPosts.html';
+        }
+
+        function redirectToMedicalPosts() {
+            window.location.href = 'RecieveMedicalPosts.html';
+        }
+
+        function redirectToTeachingPosts() {
+            window.location.href = 'RecieveTeachingPosts.html';
+        }
+    </script>
+</body>
+</html>

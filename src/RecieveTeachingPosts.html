@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Donations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        #schoolDonationsList {
+            padding: 0;
+        }
+        .donation-item {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .donation-item:hover {
+            transform: translateY(-5px);
+        }
+        .donation-category {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .donation-details {
+            list-style-type: none;
+            padding: 0;
+        }
+        .donation-details li {
+            margin-bottom: 10px;
+        }
+        .donate-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .donation-form {
+            display: none;
+            margin-top: 10px;
+        }
+        .donation-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .donation-form input[type="text"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .navigation-buttons {
+    text-align: center; /* Center the content horizontally */
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.navigation-buttons button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #181819;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.navigation-buttons button:hover {
+    background-color: #0056b3;
+}
+  #showNavigationButton {
+    
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+      margin-bottom: 20px;
+      /* Adjust button height */
+      margin-top: 6000px /* Added margin for spacing */
+  }
+  #dashboardButton {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #3e2dbc, #7c68e0);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin: 20px auto; /* Center the button horizontally and add margin at the top */
+}
+
+#dashboardButton:hover {
+    background: linear-gradient(135deg, #e0ff70, #7ee5b8);
+    transform: translateY(-2px);
+}
+  #showNavigationButton:hover {
+      background-color: #0056b3;
+  }
+  .donate-button {
+            margin-left: 10px; /* Add space to the right of the button */
+        }
+        .filter-label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* Style for the filter dropdowns */
+        .filter-select {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .location-button {
+            background-color: #007bff; /* Change button color to blue */
+            color: #fff; /* Change text color to white */
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-left: 10px; /* Add space after the "Donate" button */
+        }
+        
+    </style>
+    <style>
+        /* Style for the filter containers */
+        .filter-container {
+            margin-bottom: 10px;
+        }
+    
+        /* Style for filter labels */
+        .filter-label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    
+        /* Style for the filter dropdowns */
+        .filter-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            appearance: none; 
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23007bff'><path d='M10 12l-5-5 1.5-1.5L10 9.5 13.5 5 15 6.5z'/></svg>"); 
+            background-repeat: no-repeat;
+            background-position: calc(100% - 10px) center;
+            background-size: 14px;
+        }
+    
+        /* Style for filter options */
+        .filter-select option {
+            padding: 8px;
+        }
+        .image-button {
+    background-color: #007bff; /* Blue background color */
+    color: #fff; /* White text color */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease-in-out; /* Smooth transition on hover */
+}
+
+/* Hover effect for the View Image button */
+.image-button:hover {
+    background-color: #0056b3; /* Darker blue color on hover */
+}
+    </style>
+    
+   
+    <div class="container">
+        <button id="dashboardButton" onclick="navigateToDashboard()">Go to Dashboard</button>
+        </div>
+
+    <select id="filterSelect">
+        <option value="all">All</option>
+        <option value="school_supplies">School Supplies</option>
+        <option value="teaching">Teaching Cases</option>
+    </select>
+    
+    <!-- Dynamic filter dropdowns -->
+    <div id="dynamicFilters"></div>
+
+    
+</head>
+<body>
+    
+    <h1>School Donations</h1>
+    <ul id="schoolDonationsList"></ul>
+    <div style="text-align: center; margin-top: 20px;">
+        
+    </div>
+    <script>
+        function redirectToConfirmed() {
+            window.location.href = 'DonorsSearchOrgs.html';
+        }
+    </script>
+    
+    <script>
+       function navigateToDashboard() {
+        window.location.href = 'DonorDashboard.html';
+    }
+
+        document.addEventListener('DOMContentLoaded', function() {
+    const schoolDonations = JSON.parse(localStorage.getItem('donationPosts')) || [];
+    const schoolDonationsList = document.getElementById('schoolDonationsList');
+    const filterSelect = document.getElementById('filterSelect');
+    const dynamicFilters = document.getElementById('dynamicFilters');
+
+    // Initialize an object to store available filter options
+    const filters = {};
+    
+    // Populate filter options
+    schoolDonations.forEach(function(donation) {
+        if (donation.category === 'school_supplies' || donation.category === 'teaching') {
+            for (const key in donation) {
+                // Exclude specific properties
+                if (key !== 'category' && key !== 'moreInfo' && key !== 'bookName' && key !== 'author' && key !== 'language' && key !== 'edition' && key !== 'summary' && key !== 'bookImage') {
+                    if (!filters[key]) {
+                        filters[key] = [];
+                    }
+                    if (!filters[key].includes(donation[key])) {
+                        filters[key].push(donation[key]);
+                    }
+                }
+            }
+        }
+    });
+
+    // Create filter dropdowns excluding specific properties
+    // Add the new loop to create filter containers and dropdowns
+for (const key in filters) {
+    const filterContainer = document.createElement('div');
+    filterContainer.classList.add('filter-container');
+
+    const label = document.createElement('label');
+    label.classList.add('filter-label');
+    label.textContent = key;
+    filterContainer.appendChild(label);
+
+    const select = document.createElement('select');
+    select.classList.add('filter-select');
+    select.id = key + 'Filter';
+
+    // Create options for the select element
+    const allOption = document.createElement('option');
+    allOption.value = 'all';
+    allOption.textContent = 'All';
+    select.appendChild(allOption);
+
+    filters[key].forEach(function(value) {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        select.appendChild(option);
+    });
+
+    filterContainer.appendChild(select);
+    dynamicFilters.appendChild(filterContainer);
+}
+
+// Event listener for select elements
+dynamicFilters.addEventListener('change', function(event) {
+    const target = event.target;
+    if (target && target.classList.contains('filter-select')) {
+        displayItems(filterSelect.value);
+    }
+});
+
+
+            // Display items based on the selected filter
+            function displayItems(filter) {
+                schoolDonationsList.innerHTML = ''; // Clear current items
+                schoolDonations.forEach(function(donation) {
+                    if (filter === 'all' || donation.category === filter) {
+                        if (donation.category === 'school_supplies' || donation.category === 'teaching') {
+                            if (matchesFilters(donation)) {
+                                createDonationItem(donation);
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Check if a donation matches the selected filter criteria
+            function matchesFilters(donation) {
+                for (const key in filters) {
+                    const select = document.getElementById(key + 'Filter');
+                    if (select.value !== 'all' && donation[key] !== select.value) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            // Create a donation item and append it to the list
+            function createViewLocationButton(donation) {
+    if (donation.category === 'teaching') {
+        const button = document.createElement('button');
+        button.classList.add('location-button');
+        button.textContent = 'View Pinned Location';
+        button.style.marginTop = '10px';
+        button.addEventListener('click', function() {
+            window.location.href = 'map.html';
+        });
+        return button;
+    } else {
+        return null;
+    }
+}
+// Create a button for viewing the image
+
+// Modify the createDonationItem function to include the View Image button for book posts
+function createDonationItem(donation) {
+    const listItem = document.createElement('li');
+    listItem.classList.add('donation-item');
+    const donationDetails = document.createElement('ul');
+    donationDetails.classList.add('donation-details');
+
+    const categoryItem = document.createElement('li');
+    categoryItem.classList.add('donation-category');
+    categoryItem.textContent = donation.category.replace('_', ' ');
+    donationDetails.appendChild(categoryItem);
+
+    for (const key in donation) {
+        if (key !== 'category' && key !== 'moreInfo') {
+            const detailItem = document.createElement('li');
+            detailItem.textContent = key.replace(/([a-z])([A-Z])/g, '$1 $2') + ': ' + donation[key];
+            donationDetails.appendChild(detailItem);
+        }
+    }
+
+    const donateButton = createDonateButton(donation);
+    const viewLocationButton = createViewLocationButton(donation); // Create location button
+    const viewImageButton = createViewImageButton(donation); // Create image button for books
+    listItem.appendChild(donationDetails);
+    if (viewLocationButton) {
+        listItem.appendChild(viewLocationButton);
+    }
+    if (viewImageButton) { // Add the image button if it exists
+        listItem.appendChild(viewImageButton);
+    }
+    listItem.appendChild(donateButton);
+    schoolDonationsList.appendChild(listItem);
+
+    donateButton.addEventListener('click', function() {
+        showDonationForm(donation, listItem, donateButton);
+    });
+}
+
+// Create a button for viewing the image for book posts
+function createViewImageButton(donation) {
+    if (donation.category === 'school_supplies' && donation.supplyType === 'books' ) {
+        const button = document.createElement('button');
+        button.classList.add('image-button');
+        button.textContent = 'View Image';
+        button.style.marginTop = '10px';
+        button.addEventListener('click', function() {
+            window.location.href = 'image2.html'; // Redirect to the image URL
+        });
+        return button;
+    } else {
+        return null;
+    }
+}
+
+
+
+            // Create a donate button
+            function createDonateButton(donation) {
+                const button = document.createElement('button');
+                button.classList.add('donate-button');
+                button.textContent = 'Donate';
+                return button;
+            }
+
+            // Show donation form
+            function showDonationForm(donation, listItem, donateButton) {
+                const donationForm = document.createElement('form');
+                donationForm.classList.add('donation-form');
+                for (const key in donation) {
+                    if (key !== 'category' && key !== 'moreInfo') {
+                        const label = document.createElement('label');
+                        label.textContent = key.replace(/([a-z])([A-Z])/g, '$1 $2') + ':';
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.name = key;
+                        input.placeholder = 'Enter ' + key.replace(/([a-z])([A-Z])/g, '$1 $2');
+                        donationForm.appendChild(label);
+                        donationForm.appendChild(input);
+                    }
+                }
+                const submitButton = document.createElement('input');
+                submitButton.type = 'submit';
+                submitButton.value = 'Submit';
+                donationForm.appendChild(submitButton);
+                listItem.appendChild(donationForm);
+                donateButton.style.display = 'none'; // Hide the donate button after clicking
+
+                donationForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    // Handle form submission, for example, redirecting to a new page
+                    // You can replace the following line with your desired redirection logic
+                    window.location.href = 'TransportationManagement.html';
+                });
+                donationForm.style.display = 'block'; // Display the form
+            }
+
+            displayItems('all'); // Initial display of all relevant categories
+
+            filterSelect.addEventListener('change', function() {
+                displayItems(this.value);
+            });
+        });
+        function viewDonorrrDetails() {
+            window.location.href = 'TeachersDetail.html'; // Redirect to donor_details.html
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Map with One Pin</title>
+    <style>
+        /* Existing styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .map-container {
+            max-width: 400px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        h2 {
+            text-align: center;
+            margin: 10px 0;
+        }
+        .map {
+            height: 200px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        span.editable {
+            display: inline-block;
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="map-container">
+        <h2>Pinned location</h2>
+        <span id="addressDisplay" class="editable" onclick="makeEditable()">Cairo, Egypt</span>
+        <div id="map" class="map"></div>
+    </div>
+
+    <script>
+        var map;
+        var marker;
+
+        function initMap() {
+            var cairo = {lat: 30.0444, lng: 31.2357};
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: cairo,
+                zoom: 12
+            });
+            marker = new google.maps.Marker({
+                position: cairo,
+                map: map,
+                title: 'Pinned location'
+            });
+        }
+
+        function makeEditable() {
+            var addressDisplay = document.getElementById('addressDisplay');
+            var currentAddress = addressDisplay.innerText;
+            var inputField = document.createElement('input');
+            inputField.type = 'text';
+            inputField.value = currentAddress;
+            inputField.classList.add('editable');
+            inputField.addEventListener('blur', function() {
+                updateAddress(inputField.value);
+            });
+            addressDisplay.parentNode.replaceChild(inputField, addressDisplay);
+            inputField.focus();
+        }
+
+        function updateAddress(newAddress) {
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'address': newAddress}, function(results, status) {
+                if (status === 'OK') {
+                    map.setCenter(results[0].geometry.location);
+                    marker.setPosition(results[0].geometry.location);
+                    document.getElementById('addressDisplay').innerText = newAddress;
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4x9KD9_ecTbberyIO4vLzj7FUjxewxss&callback=initMap" async defer></script>
+</body>
+</html>

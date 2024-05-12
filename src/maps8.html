@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Map with One Pin</title>
+    <style>
+        /* Existing styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .map-container {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        h2 {
+            text-align: center;
+            margin: 10px 0;
+        }
+        .map {
+            height: 400px;
+            width: 100%;
+        }
+        #dashboardButtonContainer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        #dashboardButton {
+            background: linear-gradient(135deg, #6586da, #06594e);
+            padding: 20px 40px; /* Increase padding for a larger button size */
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        #dashboardButton:hover {
+            background: linear-gradient(135deg, #b7c7e5, #9cc0b0);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+   
+    <div class="map-container">
+        <h2>Pinned location</h2>
+        <p>Address: Tahrir Square, Cairo, Egypt</p> <!-- Specific address -->
+        <div id="map" class="map"></div>
+    </div>
+
+    <div id="dashboardButtonContainer">
+        <button id="dashboardButton" onclick="navigateTo('DonorDashboard.html')">Go to Dashboard</button>
+    </div>
+    
+    <script>
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+        function initMap() {
+            // Define Cairo coordinates
+            var cairo = {lat: 30.0444, lng: 31.2357};
+
+            // Create the map centered on Cairo
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: cairo,
+                zoom: 12
+            });
+
+            // Generate a random location around Cairo
+            var randomLat = cairo.lat + (Math.random() - 0.5) * 0.2;
+            var randomLng = cairo.lng + (Math.random() - 0.5) * 0.2;
+
+            // Create a marker at the random location
+            var marker = new google.maps.Marker({
+                position: {lat: randomLat, lng: randomLng},
+                map: map,
+                title: 'Pinned location'
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4x9KD9_ecTbberyIO4vLzj7FUjxewxss&callback=initMap" async defer></script>
+</body>
+</html>

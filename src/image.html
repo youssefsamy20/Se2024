@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f8f8;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .text-container {
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .text-container p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .image-container {
+            border-top: 1px solid #ccc;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            padding: 12px 30px;
+            background-color: #4a7cff;
+            color: #fff;
+            border: 1px solid #4a7cff;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .button-container button:hover {
+            background-color: #70a1ff;
+            border-color: #70a1ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-container">
+            <p>By giving back to the communities and industries we serve, we pursue the essential ideal of "doing well by doing good".</p>
+        </div>
+        <div class="image-container">
+            <script>
+                // Retrieve the image URL from the query parameter
+                const imageUrl = "https://t3.ftcdn.net/jpg/02/46/70/82/360_F_246708269_WzeXfbrGzkX5axOatRwF0kagyBtGjXh5.jpg";
+
+                // Display the image
+                if (imageUrl) {
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    document.querySelector('.image-container').appendChild(img);
+                } else {
+                    // If no image URL is provided, display a message
+                    const errorMessage = document.createElement('div');
+                    errorMessage.textContent = 'No image available.';
+                    errorMessage.classList.add('error-message');
+                    document.querySelector('.image-container').appendChild(errorMessage);
+                }
+            </script>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button onclick="navigateToDashboard()">Go to Dashboard</button>
+        <button onclick="navigateToManageDonationPosts()">Back to Donation Posts</button>
+    </div>
+
+    <script>
+        function navigateToDashboard() {
+            window.location.href = 'DonorDashboard.html';
+        }
+
+        function navigateToManageDonationPosts() {
+            window.location.href = 'managadonationposts.html';
+        }
+    </script>
+</body>
+</html>

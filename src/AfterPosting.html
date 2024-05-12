@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Donation Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .donation-post {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .donation-post h2 {
+            margin-top: 0;
+        }
+        button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+        }
+        .post-content {
+    position: relative;
+}
+
+.donation-post-content {
+    position: relative;
+    padding-top: 25px; /* Adjust as needed */
+}
+
+.pending-label {
+    position: absolute;
+    top: 0;
+    left: 500px; /* Adjust as needed */
+    background-color: #f00; /* Adjust background color as needed */
+    color: #fff; /* Adjust text color as needed */
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Donation Posts</h1>
+
+        <div id="donationPosts"></div>
+    </div>
+   
+    <script>
+        var donationPosts = JSON.parse(localStorage.getItem('donationPosts')) || [];
+        displayDonationPosts();
+
+        function displayDonationPosts() {
+            var donationPostsContainer = document.getElementById('donationPosts');
+            donationPostsContainer.innerHTML = '';
+      
+            donationPosts.forEach(function(post, index) {
+                var postDiv = document.createElement('div');
+                postDiv.classList.add('donation-post');
+                var detailsHtml = '';
+                switch (post.category) {
+                    case 'clothes':
+                        detailsHtml = `
+                        <p>Clothes Size: ${post.clothesSize}</p>
+                            <p>Age: ${post.clothesAge}</p>
+                            <p>Gender: ${post.clothesGender}</p>
+                            <p>Season: ${post.season}</p>
+                            <p>Material:${post.material}</p>
+                            <p>Quantity: ${post.clothesQuantity}</p>
+                            <label for="quantity_${index}">Specify Quantity:</label>
+                            <input type="number" id="quantity_${index}" min="1" value="1">
+                            <button onclick="donateClothes(${index})">Donate</button>
+                        `;
+                        break;
+                    case 'toys':
+                        detailsHtml = `
+                            <p>Age: ${post.toyAge}</p>
+                            <p>Gender: ${post.toyGender}</p>
+                            <p>Toy Category: ${post.toyCategory}</p>
+                            
+                            <p>Quantity: ${post.toyQuantity}</p>
+                            <label for="quantity_${index}">Specify Quantity:</label>
+                            <input type="number" id="quantity_${index}" min="1" value="1">
+                            <button onclick="donateToys(${index})">Donate</button>
+                        `;
+                        break;
+                    case 'food':
+                        detailsHtml = `
+                            <p>Food Type: ${post.foodType}</p>
+                            <p>Quantity: ${post.foodQuantity}</p>
+                            <label for="quantity_${index}">Specify Quantity:</label>
+                            <input type="number" id="quantity_${index}" min="1" value="1">
+                            <button onclick="donateFood(${index})">Donate</button>
+                        `;
+                        break;
+                    case 'medical_supplies':
+                        detailsHtml = `
+                            <p>Medical Supply Type: ${post.medicalSupplyType}</p>
+                            <p>Device Type: ${post.deviceType}</p>
+                            <p>Use: ${post.use}</p>
+                            <p>Quantity: ${post.medicalQuantity}</p>
+                            <p>Image: ${post.image}</p>
+                            <label for="quantity_${index}">Specify Quantity:</label>
+                            <input type="number" id="quantity_${index}" min="1" value="1">
+                            <button onclick="donateMedicalSupplies(${index})">Donate</button>
+                        `;
+                        break;
+                    case 'school_supplies':
+                        detailsHtml = `
+                            <p>Supply Type: ${post.supplyType}</p>
+                            <p>Quantity: ${post.SchoolQuantity}</p>
+                            <label for="quantity_${index}">Specify Quantity:</label>
+                            <input type="number" id="quantity_${index}" min="1" value="1">
+                            <button onclick="donateSchoolSupplies(${index})">Donate</button>
+                        `;
+                        break;
+                    case 'teaching':
+                        detailsHtml = `
+                            <p>Subject: ${post.subject}</p>
+                            <p>Area: ${post.area}</p>
+                            <p>teachingGovernorate: ${post.teachingGovernorate}</p>
+                        `;
+                        break;
+                    case 'blood_donations':
+                        detailsHtml = `
+                            <p>Patient Name: ${post.patientName}</p>
+                            <p>Blood Type: ${post.bloodType}</p>
+                            <p>Hospital Name: ${post.hospitalName}</p>
+                            <p>Hospital Area: ${post.hospitalArea}</p>
+                            <p>Governorate: ${post.governorate}</p>
+                            <p>Hospital Address: ${post.hospitalAddress}</p>
+                        `;
+                        break;
+                    default:
+                        detailsHtml = `<p>No specific details available.</p>`;
+                        break;
+                }
+
+                postDiv.innerHTML = `
+    <div class="post-content">
+        <span class="pending-label">Pending</span>
+        <h2>Category: ${post.category}</h2>
+        <p>Details: ${post.moreInfo}</p>
+        ${detailsHtml}
+        <button onclick="editPost(${index})">Edit</button>
+        <button onclick="deletePost(${index})">Delete</button>
+    </div>
+`;
+
+                donationPostsContainer.appendChild(postDiv);
+            });
+
+            // Set timeout for showing message after 10 seconds
+            setTimeout(function() {
+                var lastPost = donationPosts[donationPosts.length - 1];
+                showMessage(lastPost);
+            }, 10000);
+        }
+
+        function showMessage(post) {
+            var message = document.createElement('div');
+            message.classList.add('message');
+            message.textContent = 'A donor has accepted your offer for the following post: ';
+            var postDetails = document.createElement('div');
+            postDetails.innerHTML = `
+                <h2>Category: ${post.category}</h2>
+                <p>Details: ${post.moreInfo}</p>
+                <p>Additional Details:</p>
+                <div>${getAdditionalDetails(post)}</div>
+                <button onclick="coordinatePickup()">Coordinate Pickup</button>
+            `;
+            message.appendChild(postDetails);
+            document.body.appendChild(message);
+        }
+
+        function getAdditionalDetails(post) {
+            var detailsHtml = '';
+            switch (post.category) {
+                case 'clothes':
+                    detailsHtml = `
+                        <p>Clothes Size: ${post.clothesSize}</p>
+                        <p>Age: ${post.clothesAge}</p>
+                        <p>Gender: ${post.clothesGender}</p>
+                        <p>Season: ${post.season}</p>
+                        <p>Material: ${post.material}</p>
+                        <p>Quantity: ${post.clothesQuantity}</p>
+                    `;
+                    break;
+                case 'toys':
+                    detailsHtml = `
+                        <p>Age: ${post.toyAge}</p>
+                        <p>Gender: ${post.toyGender}</p>
+                        <p>Toy Category: ${post.toyCategory}</p>
+                        <p>Quantity: ${post.toyQuantity}</p>
+                    `;
+                    break;
+                case 'food':
+                    detailsHtml = `
+                        <p>Food Type: ${post.foodType}</p>
+                        <p>Quantity: ${post.foodQuantity}</p>
+                    `;
+                    break;
+                case 'medical_supplies':
+                    detailsHtml = `
+                        <p>Medical Supply Type: ${post.medicalSupplyType}</p>
+                        <p>Device Type: ${post.deviceType}</p>
+                        <p>Use: ${post.use}</p>
+                        <p>Quantity: ${post.medicalQuantity}</p>
+                        <p>Image: ${post.image}</p>
+                    `;
+                    break;
+                case 'school_supplies':
+                    detailsHtml = `
+                        <p>Supply Type: ${post.supplyType}</p>
+                        <p>Quantity: ${post.SchoolQuantity}</p>
+                    `;
+                    break;
+                case 'teaching':
+                    detailsHtml = `
+                        <p>Subject: ${post.subject}</p>
+                        <p>Area: ${post.area}</p>
+                        <p>teachingGovernorate: ${post.teachingGovernorate}</p>
+                    `;
+                    break;
+                case 'blood_donations':
+                    detailsHtml = `
+                        <p>Patient Name: ${post.patientName}</p>
+                        <p>Blood Type: ${post.bloodType}</p>
+                        <p>Hospital Name: ${post.hospitalName}</p>
+                        <p>Hospital Area: ${post.hospitalArea}</p>
+                        <p>Governorate: ${post.governorate}</p>
+                        <p>Hospital Address: ${post.hospitalAddress}</p>
+                    `;
+                    break;
+                default:
+                    detailsHtml = `<p>No specific details available.</p>`;
+                    break;
+            }
+            return detailsHtml;
+        }
+
+        function coordinatePickup() {
+            window.location.href = 'OrgPickup.html';
+        }
+    </script>
+</body>
+</html>

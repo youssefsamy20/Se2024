@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Donation Posts</title>
+    <style>
+        /* Your existing CSS styles here */
+
+        /* New styles for navigation bar */
+        .navigation-bar {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            opacity: 0; /* Initially hidden */
+            pointer-events: none; /* Initially not clickable */
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .navigation-bar.show {
+            opacity: 1; /* Show when class "show" is added */
+            pointer-events: auto; /* Enable click events */
+        }
+
+        .navigation-bar button {
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .navigation-bar button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #cfe7ff; /* Cyan background */
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff; /* White container background */
+            border-radius: 10px; /* Rounded corners for container */
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Drop shadow effect */
+        }
+        h1 {
+            text-align: center;
+        }
+        .donation-post {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .donation-post h2 {
+            margin-top: 0;
+        }
+        button {
+            padding: 5px 10px;
+            background-color: #007bff; /* Blue button background */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .redirect-button {
+    padding: 15px 30px;
+    background-color: #007bff; /* Cyan background */
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    transition: background-color 0.3s ease-in-out;
+}
+
+.redirect-button:hover {
+    background-color: #0056b3; /* Darker cyan on hover */
+}
+
+    </style>
+    <button onclick="redirectToDonorDashboard()" class="redirect-button">Go to Donor Dashboard</button>
+
+</head>
+
+
+<body>
+    
+    <div class="container">
+        <h1>Manage Donation Posts</h1>
+      
+        <!-- Toys Donation Requests Filters -->
+        <div>
+            <h2>Filter Toys Donation Requests</h2>
+            <label for="filterToyAge">Filter by Age:</label>
+            <input type="number" id="filterToyAge" placeholder="Enter age" oninput="filterByToyAge()">
+            
+            <label for="filterToyGender">Filter by Gender:</label>
+            <select id="filterToyGender" onchange="filterByToyGender()">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+            
+            <label for="filterToyCategory">Filter by Category:</label>
+            <select id="filterToyCategory" onchange="filterByToyCategory()">
+                <option value="">Select Category</option>
+                <option value="board_games">Board Games</option>
+                <option value="stuffed_toys">Stuffed Toys</option>
+                <option value="dolls">Dolls</option>
+                <option value="sports">Sports</option>
+                <option value="cars">Cars</option>
+                <option value="outdoor">Outdoor</option>
+            </select>
+        </div>
+        
+        <!-- Blood Donation Requests Filters -->
+        <div>
+            <h2>Filter Blood Donation Requests</h2>
+            <label for="filterHospital">Filter by Hospital:</label>
+            <input type="text" id="filterHospital" placeholder="Enter hospital name" oninput="filterByHospital()">
+            
+            <label for="filterGovernorate">Filter by Governorate:</label>
+            <input type="text" id="filterGovernorate" placeholder="Enter governorate" oninput="filterByGovernorate()">
+            
+            <label for="filterArea">Filter by Area:</label>
+            <input type="text" id="filterArea" placeholder="Enter area" oninput="filterByArea()">
+        </div>
+
+        <!-- Teaching Donation Requests Filters -->
+        <div>
+            <h2>Filter Teaching Donation Requests</h2>
+            <label for="filterTeachingSubject">Filter by Subject:</label>
+            <input type="text" id="filterTeachingSubject" placeholder="Enter subject" oninput="filterByTeachingSubject()">
+            
+            <label for="filterTeachingArea">Filter by Area:</label>
+            <input type="text" id="filterTeachingArea" placeholder="Enter area" oninput="filterByTeachingArea()">
+            
+            <label for="filterTeachingGovernorate">Filter by Governorate:</label>
+            <input type="text" id="filterTeachingGovernorate" placeholder="Enter governorate" oninput="filterByTeachingGovernorate()">
+        </div>
+
+        <!-- Food Donation Requests Filters -->
+        <div>
+            <label for="filterFoodType">Filter by Food Type:</label>
+            <select id="filterFoodType" onchange="filterByFoodType()">
+                <option value="">Select Food Type</option>
+                <option value="fruits_and_vegetables">Fruits and Vegetables</option>
+                <option value="canned_foods">Canned Food</option>
+                <option value="fresh_meals">Fresh Meals</option>
+                <option value="baked_goods">Baked Goods</option>
+            </select>
+        </div>
+
+        <!-- Donation Requests Filters -->
+        <div>
+            <h2>Filter Donation Requests</h2>
+            <button onclick="filterByCategory('clothes')">Clothes</button>
+            <button onclick="filterByCategory('toys')">Toys</button>
+            <button onclick="filterByCategory('food')">Food</button>
+            <button onclick="filterByCategory('medical_supplies')">Medical Supplies</button>
+            <button onclick="filterByCategory('school_supplies')">School Supplies</button>
+            <button onclick="filterByCategory('blood_donations')">Blood Donations</button>
+            <button onclick="filterByCategory('teaching')">Teaching</button>
+            <button onclick="resetFilter()">Reset Filter</button>
+        </div>
+
+        <!-- Medical Supplies Donation Requests Filters -->
+        <div>
+            <h2>Filter Medical Supplies Donation Requests</h2>
+            <label for="filterMedicalDeviceType">Filter by Device Type:</label>
+            <select id="filterMedicalDeviceType" onchange="filterByDeviceType()">
+                <option value="">Select Device Type</option>
+                <option value="medical_devices">Medical Devices</option>
+                <option value="medical_equipment">Medical Equipment</option>
+            </select>
+            
+            <label for="filterMedicalUse">Filter by Use:</label>
+            <input type="text" id="filterMedicalUse" placeholder="Enter Medical Use" onchange="filterByMedicalUse()">
+        </div>
+
+        <!-- Search by Category -->
+        <div>
+            <label for="searchCategory">Search by Category:</label>
+            <input type="text" id="searchCategory" oninput="searchByCategory()">
+        </div>
+
+        <!-- School Supplies Donation Requests Filters -->
+        <div>
+            <h2>Filter School Supplies Donation Requests</h2>
+            <label for="filterItemType">Filter by Item Type:</label>
+            <select id="filterItemType" onchange="filterByItemType()">
+                <option value="">Select Item Type</option>
+                <option value="books">Books</option>
+                <option value="stationary">Stationary</option>
+            </select>
+        </div>
+
+        <!-- Clothes Donation Requests Filters -->
+        <div>
+            <h2>Filter Clothes Donation Requests</h2>
+            <label for="filterAge">Filter by Age:</label>
+            <input type="text" id="filterAge" placeholder="Enter age" oninput="filterByAge()">
+            
+            <label for="filterGender">Filter by Gender:</label>
+            <select id="filterGender" onchange="filterByGender()">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+            
+            <label for="filterSeason">Filter by Season:</label>
+            <input type="text" id="filterSeason" placeholder="Enter season" oninput="filterBySeason()">
+        </div>
+
+        <!-- Donation Posts Placeholder -->
+        <div id="donationPosts"></div>
+    </div>
+</body>
+</html>
+
+    <script>
+        function redirectToConfirmed() {
+            window.location.href = 'DonorsSearchOrgs.html';
+        }
+        
+
+        function redirectToDonorDashboard() {
+    window.location.href = 'DonorDashboard.html';
+}
+
+
+        
+    </script>
+    
+    <script>
+        var donationPosts = JSON.parse(localStorage.getItem('donationPosts')) || [];
+        displayDonationPosts();
+
+        function viewDonorDetails() {
+            window.location.href = 'RegularDonorDetails.html'; // Redirect to donor_details.html
+        }
+        function displayDonationPosts() {
+            var donationPostsContainer = document.getElementById('donationPosts');
+            donationPostsContainer.innerHTML = '';
+            donationPosts.forEach(function(post, index) {
+                var postDiv = document.createElement('div');
+                postDiv.classList.add('donation-post');
+                var detailsHtml = '';
+                switch (post.category) {
+                    case 'clothes':
+                        detailsHtml = `
+                        <p>Clothes Size: ${post.clothesSize}</p>
+                            <p>Age: ${post.clothesAge}</p>
+                            <p>Gender: ${post.clothesGender}</p>
+                            <p>Season: ${post.season}</p>
+                            <p>Material:${post.material}</p>
+                            <p>Quantity: ${post.clothesQuantity}</p>
+                            <label for="quantity_${index}">Specify Quantity:</label>
+                            <input type="number" id="quantity_${index}" min="1" value="1">
+                          
+                        `;
+                        break;
+                    case 'toys':
+                        detailsHtml = `
+                            <p>Age: ${post.toyAge}</p>
+                            <p>Gender: ${post.toyGender}</p>
+                            <p>Toy Category: ${post.toyCategory}</p>
+                            
+                            <p>Quantity: ${post.toyQuantity}</p>
+                            <label for="quantity_${index}">Specify Quantity:</label>
+                            <input type="number" id="quantity_${index}" min="1" value="1">
+                            
+                        `;
+                        break;
+                    case 'food':
+                        detailsHtml = `
+                            <p>Food Type: ${post.foodType}</p>
+                            <p>Quantity: ${post.foodQuantity}</p>
+                            
+                          
+                        `;
+                        break;
+                    case 'medical_supplies':
+                        detailsHtml = `
+                            <p>Medical Supply Type: ${post.medicalSupplyType}</p>
+                            <p>Device Type: ${post.deviceType}</p>
+                            <p>Use: ${post.use}</p>
+                            <p>Quantity: ${post.medicalQuantity}</p>
+                            <p>Image: ${post.image}</p>
+                            
+                            <button onclick="viewImage('${post.image}')">View Image</button>
+                          
+                        `;
+                        break;
+                    case 'school_supplies':
+                        detailsHtml = `
+                            <p>Supply Type: ${post.supplyType}</p>
+                            <p>Quantity: ${post.SchoolQuantity}</p>
+                            <label for="quantity_${index}">Specify Quantity:</label>
+                            
+                            
+                        `;
+                        if (post.supplyType === 'books') {
+                    detailsHtml += `
+                        <p>Book Name: ${post.bookName}</p>
+                        <p>Author: ${post.author}</p>
+                        <p>Language: ${post.language}</p>
+                        <p>Edition: ${post.edition}</p>
+                        <p>Summary: ${post.summary}</p>
+                        
+                    `;
+                    detailsHtml += `<button onclick="viewImage2('${post.image2}')">View Image Of Book</button>`;
+                }
+                else if (post.supplyType === 'stationary') {
+        detailsHtml += `
+            <p>Item Type: ${post.itemType}</p>
+            <p>Item Details: ${post.itemDetails}</p>
+        `;}
+                
+                        break;
+                        case 'teaching':
+                // Details for teaching posts
+                detailsHtml = `
+                    <p>Subject: ${post.subject}</p>
+                    <p>Area: ${post.area}</p>
+                    <p>teachingGovernorate: ${post.teachingGovernorate}</p>
+                `;
+                break;
+                        
+                    case 'blood_donations':
+                        detailsHtml = `
+                            <p>Patient Name: ${post.patientName}</p>
+                            <p>Blood Type: ${post.bloodType}</p>
+                            <p>Hospital Name: ${post.hospitalName}</p>
+                            <p>Hospital Area: ${post.hospitalArea}</p>
+                            <p>Governorate: ${post.governorate}</p>
+                            <p>Hospital Address: ${post.hospitalAddress}</p>
+                            <button onclick="viewLocation('${post.hospitalName}', '${post.hospitalArea}', '${post.governorate}')">View Location</button>
+                        `;
+                        break;
+                        case 'medical_case':
+    detailsHtml = `
+        <p>Patient Name: ${post.patientName}</p>
+        <p>Age: ${post.patientAge}</p>
+        <p>Gender: ${post.patientGender}</p>
+        <p>Weight (kg): ${post.patientWeight}</p>
+       
+        <div id="map_${index}"></div> <!-- Map container -->
+        <p>Address: ${post.patientAddress}</p>
+        <p>Organization Name: ${post.organizationName}</p>
+        <p>Area: ${post.CaseArea}</p>
+        <p>Case Governorate: ${post.CaseGovernorate}</p>
+        <p>Medical Specialty: ${post.medicalSpecialty}</p>
+        <p>Case Description: ${post.caseDescription}</p>
+        <button onclick="viewLocation('${post.hospitalName}', '${post.hospitalArea}', '${post.governorate}')">View Location</button>
+    `;
+    break;
+
+                    default:
+                        detailsHtml = `<p>No specific details available.</p>`;
+                        break;
+                }
+
+                postDiv.innerHTML = `
+                    <h2>Category: ${post.category}</h2>
+                    <p>Details: ${post.moreInfo}</p>
+                    ${detailsHtml}
+                    
+                    <button onclick="showDonationForm(${index})">Donate</button>
+                    <!-- Donation form -->
+    <div id="donationForm_${index}" style="display: none;">
+        <label for="quantity_${index}">Quantity:</label>
+        <input type="number" id="quantity_${index}" min="1" value="1">
+        <label for="donationDetails_${index}">Donation Details:</label>
+        <textarea id="donationDetails_${index}" rows="3" cols="30"></textarea>
+        <button onclick="submitDonationDetails(${index})">Submit</button>
+                `;
+                donationPostsContainer.appendChild(postDiv);
+            });
+        }
+        function filterByDeviceType() {
+    var deviceTypeFilter = document.getElementById('filterMedicalDeviceType').value;
+    if (!deviceTypeFilter) {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => post.category === 'medical_supplies' && post.deviceType === deviceTypeFilter);
+    displayFilteredPosts(filteredPosts);
+}
+function viewLocation(hospitalName, hospitalArea, governorate) {
+    window.location.href = 'map.html'; // Redirect to map.html
+}
+function showDonationForm(index) {
+        // Toggle the visibility of the donation form for the specified donation post
+        var formId = `donationForm_${index}`;
+        var form = document.getElementById(formId);
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+    function viewImage2(imageUrl) {
+    window.location.href = `image2.html?url=${encodeURIComponent(imageUrl)}`;
+}
+
+    function submitDonationDetails(index) {
+        var quantity = parseInt(document.getElementById(`quantity_${index}`).value);
+        var donationDetails = document.getElementById(`donationDetails_${index}`).value;
+
+        // You can handle the submission of donation details here
+        // For example, you can store the details in localStorage or send them to a server
+        
+        // Redirect the user to transportation.html
+        window.location.href = 'TransportationManagement.html';
+    }
+
+function filterByCategory(category) {
+    var filteredPosts = donationPosts.filter(post => post.category === category);
+    displayFilteredPosts(filteredPosts);
+}
+function resetFilter() {
+    displayDonationPosts();
+}
+function viewImage(imageUrl) {
+    // Redirect to image.html and pass the image URL as a query parameter
+    window.location.href = `image.html?url=${encodeURIComponent(imageUrl)}`;
+}
+
+function filterByMedicalSupplyType() {
+    var medicalSupplyTypeFilter = document.getElementById('filterMedicalSupplyType').value;
+    if (!medicalSupplyTypeFilter) {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => post.category === 'medical_supplies' && post.medicalSupplyType.toLowerCase() === medicalSupplyTypeFilter.toLowerCase());
+    displayFilteredPosts(filteredPosts);
+}
+
+function filterByHospital() {
+    var hospitalFilter = document.getElementById('filterHospital').value.trim().toLowerCase();
+    if (!hospitalFilter) {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => post.category === 'blood_donations' && post.hospitalName.toLowerCase().includes(hospitalFilter));
+    displayFilteredPosts(filteredPosts);
+}
+
+function filterByGovernorate() {
+    var governorateFilter = document.getElementById('filterGovernorate').value.trim().toLowerCase();
+    if (!governorateFilter) {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => post.category === 'blood_donations' && post.governorate.toLowerCase().includes(governorateFilter));
+    displayFilteredPosts(filteredPosts);
+}
+
+function filterByArea() {
+    var areaFilter = document.getElementById('filterArea').value.trim().toLowerCase();
+    if (!areaFilter) {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => post.category === 'blood_donations' && post.hospitalArea.toLowerCase().includes(areaFilter));
+    displayFilteredPosts(filteredPosts);
+}
+function filterByMedicalUse() {
+    var medicalUseFilter = document.getElementById('filterMedicalUse').value;
+    if (!medicalUseFilter) {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => post.category === 'medical_supplies' && post.use === medicalUseFilter);
+    displayFilteredPosts(filteredPosts);
+}
+function filterByFoodType() {
+    var foodTypeFilter = document.getElementById('filterFoodType').value;
+    console.log('Selected Food Type:', foodTypeFilter); // Debug: Log selected filter
+    if (!foodTypeFilter) {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => {
+        console.log(post.category, post.foodType); // Debug: Log each post's category and food type during filter process
+        return post.category === 'food' && post.foodType === foodTypeFilter;
+    });
+    console.log('Filtered Posts:', filteredPosts); // Debug: Log filtered results
+    displayFilteredPosts(filteredPosts);
+}
+
+        function filterByToyAge() {
+            var ageFilter = parseInt(document.getElementById('filterToyAge').value.trim());
+            if (!ageFilter || isNaN(ageFilter)) {
+                displayDonationPosts(); // If the filter input is empty or not a number, display all donation posts
+                return;
+            }
+            var filteredPosts = donationPosts.filter(post => post.category === 'toys' && parseInt(post.toyAge) === ageFilter);
+            displayFilteredPosts(filteredPosts);
+        }
+
+        function filterByToyGender() {
+            var genderFilter = document.getElementById('filterToyGender').value;
+            if (!genderFilter) {
+                displayDonationPosts(); // If the filter input is empty, display all donation posts
+                return;
+            }
+            var filteredPosts = donationPosts.filter(post => post.category === 'toys' && post.toyGender === genderFilter);
+            displayFilteredPosts(filteredPosts);
+        }
+
+        function filterByToyCategory() {
+            var categoryFilter = document.getElementById('filterToyCategory').value;
+            if (!categoryFilter) {
+                displayDonationPosts(); // If the filter input is empty, display all donation posts
+                return;
+            }
+            var filteredPosts = donationPosts.filter(post => post.category === 'toys' && post.toyCategory === categoryFilter);
+            displayFilteredPosts(filteredPosts);
+        }
+        function filterByTeachingSubject() {
+    var subjectFilter = document.getElementById('filterTeachingSubject').value.trim().toLowerCase();
+    if (!subjectFilter) {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => post.category === 'teaching' && post.subject.toLowerCase().includes(subjectFilter));
+    displayFilteredPosts(filteredPosts);
+}
+
+function filterByTeachingArea() {
+    var areaFilter = document.getElementById('filterTeachingArea').value.trim().toLowerCase();
+    if (!areaFilter) {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => post.category === 'teaching' && post.area.toLowerCase().includes(areaFilter));
+    displayFilteredPosts(filteredPosts);
+}
+
+function filterByTeachingGovernorate() {
+    var governorateFilter = document.getElementById('filterTeachingGovernorate').value.trim().toLowerCase();
+    if (!governorateFilter) {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => post.category === 'teaching' && post.teachingGovernorate.toLowerCase().includes(governorateFilter));
+    displayFilteredPosts(filteredPosts);
+}
+
+
+        function editPost(index) {
+            alert("Edit functionality not implemented yet.");
+        }
+
+        function deletePost(index) {
+            var confirmDelete = confirm('Are you sure you want to delete this post?');
+            if (confirmDelete) {
+                donationPosts.splice(index, 1);
+                localStorage.setItem('donationPosts', JSON.stringify(donationPosts));
+                displayDonationPosts();
+            }
+        }
+
+        function searchByCategory() {
+            var searchInput = document.getElementById('searchCategory').value.toLowerCase();
+            var filteredPosts = donationPosts.filter(post => post.category.toLowerCase().includes(searchInput));
+            displayFilteredPosts(filteredPosts);
+        }
+        function filterByItemType() {
+    var itemTypeFilter = document.getElementById('filterItemType').value;
+    if (itemTypeFilter === '') {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => post.category === 'school_supplies' && post.supplyType.toLowerCase() === itemTypeFilter.toLowerCase());
+    displayFilteredPosts(filteredPosts);
+}
+
+
+        function displayFilteredPosts(posts) {
+            var donationPostsContainer = document.getElementById('donationPosts');
+            donationPostsContainer.innerHTML = '';
+            posts.forEach(function(post, index) {
+                var postDiv = document.createElement('div');
+                postDiv.classList.add('donation-post');
+                var detailsHtml = '';
+                switch (post.category) {
+                    case 'clothes':
+                        detailsHtml = `
+                            <p>Clothes Size: ${post.clothesSize}</p>
+                            <p>Age: ${post.clothesAge}</p>
+                            <p>Gender: ${post.clothesGender}</p>
+                            <p>Season: ${post.season}</p>
+                            <p>Material:${post.material}</p>
+                            <p>Quantity: ${post.clothesQuantity}</p>
+                            
+                        `;
+                        break;
+                    case 'toys':
+                        detailsHtml = `
+                            <p>Age: ${post.toyAge}</p>
+                            <p>Gender: ${post.toyGender}</p>
+                            <p>Toy Category: ${post.toyCategory}</p>
+                            <p>Quantity: ${post.toyQuantity}</p>
+                        `;
+                        break;
+                        case 'teaching':
+                // Details for teaching posts
+                detailsHtml = `
+                    <p>Subject: ${post.subject}</p>
+                    <p>Area: ${post.area}</p>
+                    <p>teachingGovernorate: ${post.teachingGovernorate}</p>
+                `;
+                break;
+                    case 'food':
+                        detailsHtml = `
+                            <p>Food Type: ${post.foodType}</p>
+                            <p>Quantity: ${post.foodQuantity}</p>
+                        `;
+                        break;
+                    case 'medical_supplies':
+                        detailsHtml = `
+                            <p>Medical Supply Type: ${post.medicalSupplyType}</p>
+                            <p>Device Type: ${post.deviceType}</p>
+                            <p>Use: ${post.use}</p>
+                            <p>Quantity: ${post.medicalQuantity}</p>
+                            <p>Image: ${post.image}</p>
+                        `;
+                        break;
+                    case 'school_supplies':
+                        detailsHtml = `
+                        <p>Supply Type: ${post.supplyType}</p>
+                        `;
+                        break;
+                    case 'blood_donations':
+                        detailsHtml = `
+                            <p>Patient Name: ${post.patientName}</p>
+                            <p>Blood Type: ${post.bloodType}</p>
+                            <p>Hospital Name: ${post.hospitalName}</p>
+                            <p>Hospital Area: ${post.hospitalArea}</p>
+                            <p>Governorate: ${post.governorate}</p>
+                            <p>Hospital Address: ${post.hospitalAddress}</p>
+                        `;
+                        break;
+                    default:
+                        detailsHtml = `<p>No specific details available.</p>`;
+                        break;
+                }
+
+                postDiv.innerHTML = `
+                    <h2>Category: ${post.category}</h2>
+                    <p>Details: ${post.moreInfo}</p>
+                    ${detailsHtml}
+                    <button onclick="editPost(${index})">Edit</button>
+                    <button onclick="deletePost(${index})">Delete</button>
+                `;
+                donationPostsContainer.appendChild(postDiv);
+            });
+        }
+
+        function filterByAge() {
+    var ageFilter = document.getElementById('filterAge').value.trim();
+    if (ageFilter === '') {
+        displayDonationPosts(); // If the filter input is empty, display all donation posts
+        return;
+    }
+    var filteredPosts = donationPosts.filter(post => post.category === 'clothes' && parseInt(post.clothesAge) === parseInt(ageFilter));
+    displayFilteredPosts(filteredPosts);
+}
+
+
+
+
+
+        function filterByGender() {
+            var genderFilter = document.getElementById('filterGender').value;
+            var filteredPosts = donationPosts.filter(post => post.category === 'clothes' && post.clothesGender === genderFilter);
+            displayFilteredPosts(filteredPosts);
+        }
+
+        function filterBySeason() {
+            var seasonFilter = document.getElementById('filterSeason').value.trim().toLowerCase();
+            var filteredPosts = donationPosts.filter(post => post.category === 'clothes' && post.season.toLowerCase().includes(seasonFilter));
+            displayFilteredPosts(filteredPosts);
+        }
+        function donateClothes(index) {
+            var quantity = parseInt(document.getElementById(`quantity_${index}`).value);
+            // You can add validation here to ensure quantity is valid
+            // Update the donation quantity for the specific clothing item post
+            donationPosts[index].clothesQuantity = quantity;
+            localStorage.setItem('donationPosts', JSON.stringify(donationPosts));
+            // Optionally, you can update the displayed donation posts to reflect the change in quantity
+            displayDonationPosts();
+            alert(`You have donated ${quantity} item(s) for this clothing donation request.`);
+        }
+    </script>
+</body>
+</html> 

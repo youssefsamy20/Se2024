@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Details</title>
+    <style>
+        /* Existing styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .detail {
+            margin-bottom: 15px;
+        }
+        .detail p {
+            margin: 0;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        #dashboardButton {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #bc662d, #e09c68);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin: 20px auto; /* Center the button horizontally and add margin at the top */
+}
+
+#dashboardButton:hover {
+    background: linear-gradient(135deg, #e0ff70, #7ee5b8);
+    transform: translateY(-2px);
+}
+    </style>
+    <div style="text-align: center; margin-top: 20px;">
+        <button id="dashboardButton" onclick="navigateToDashboard()">Go to Dashboard</button>
+    </div>
+</head>
+<body>
+    <div class="container">
+        <h1>Organization Details</h1>
+
+        <div class="detail">
+            <label for="orgFirstName">First Name:</label>
+            <p id="orgFirstName">John</p>
+        </div>
+
+        <div class="detail">
+            <label for="orgLastName">Last Name:</label>
+            <p id="orgLastName">Doe</p>
+        </div>
+
+        <div class="detail">
+            <label for="orgGender">Gender:</label>
+            <p id="orgGender">Male</p>
+        </div>
+
+        <div class="detail">
+            <label for="orgEmail">Email:</label>
+            <p id="orgEmail">john@example.com</p>
+        </div>
+        
+        <div class="detail">
+            <label for="orgContactNumber">Contact Number:</label>
+            <p id="orgContactNumber">1234567890</p>
+        </div>
+
+        <div class="detail">
+            <label for="orgName">Organization Name:</label>
+            <p id="orgName">Example Organization</p>
+        </div>
+        
+        <div class="detail">
+            <label for="orgArea">Organization Area:</label>
+            <p id="orgArea">Example Area</p>
+        </div>
+        
+        <div class="detail">
+            <label for="orgGovernorate">Organization Governorate:</label>
+            <p id="orgGovernorate">Example Governorate</p>
+        </div>
+        
+        <div class="detail">
+            <label for="orgType">Organization Type:</label>
+            <p id="orgType">Charity</p>
+        </div>
+        
+        <div class="detail">
+            <label for="verificationDocument">Verification Document:</label>
+            <p id="verificationDocument">example_document.pdf</p>
+        </div>
+
+        <div class="detail">
+            <label for="orgLocation">Organization Location:</label>
+            <p id="orgLocation">Latitude: 30.0444, Longitude: 31.2357</p>
+        </div>
+    </div>
+    <script>
+         function navigateToDashboard() {
+        window.location.href = 'dashboard.html';}
+    </script>
+    
+    
+</body>
+</html>

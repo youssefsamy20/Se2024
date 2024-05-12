@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject and Class Selection</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Subject and Class Selection</h1>
+        <label for="teachingSubjects">Teaching Subjects:</label>
+        <input id="teachingSubjects" type="text" required><br>
+        
+        <label for="proBonoClasses">Number of Pro-Bono Classes:</label>
+        <input id="proBonoClasses" type="number" required><br>
+        
+        <button onclick="submit()">Submit</button>
+        
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+    
+    <script>
+        function submit() {
+            const teachingSubjects = document.getElementById('teachingSubjects').value;
+            const proBonoClasses = document.getElementById('proBonoClasses').value;
+            
+            // Perform validation if needed
+            
+            // For demonstration purpose, you can log the values to the console
+            console.log('Teaching Subjects:', teachingSubjects);
+            console.log('Pro-Bono Classes:', proBonoClasses);
+            
+            // Redirect to desired page after submission
+            window.location.href = 'desired_page.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Locations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        label, input, button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+        input, button {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        input {
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #map {
+            height: 400px; /* Set the height of the map */
+            margin-top: 20px;
+        }
+        .error-message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Clinic Location Specification</h1>
+
+        <label for="hospitalName">Clinic Name:</label>
+        <input id="hospitalName" type="text">
+
+        <label for="hospitalAddress">Clinic Address:</label>
+        <input id="hospitalAddress" type="text">
+
+        <label for="clinicSpecialty">Specialty:</label>
+        <input id="clinicSpecialty" type="text">
+
+        <label for="proBonoCases">Pro-bono Cases:</label>
+        <input id="proBonoCases" type="number" min="0" step="1">
+
+        <div id="map"></div>
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4x9KD9_ecTbberyIO4vLzj7FUjxewxss"></script>
+    <script>
+        let map;
+        let markers = [];
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: {lat: 30.0444, lng: 31.2357} // Centered around Cairo
+            });
+
+            map.addListener('click', function(event) {
+                placeMarker(event.latLng);
+            });
+        }
+
+        function placeMarker(location) {
+            deleteMarkers();
+
+            const marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                title: 'Clinic Location'
+            });
+
+            // Store the location in local storage
+            localStorage.setItem('clinicLocation', JSON.stringify({lat: location.lat(), lng: location.lng()}));
+
+            markers.push(marker);
+        }
+
+        function deleteMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Donation Drop-off Schedule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        label, select, button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #dashboardButton {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #4a7cff, #68e0cf);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin: 20px auto; /* Center the button horizontally and add margin at the top */
+}
+
+#dashboardButton:hover {
+    background: linear-gradient(135deg, #70a1ff, #7ee5b8);
+    transform: translateY(-2px);
+}
+        
+    </style>
+    <div style="text-align: center; margin-top: 20px;">
+        <button id="dashboardButton" onclick="navigateToDashboard()">Go to Dashboard</button>
+    </div>
+    
+</head>
+
+<body>
+    <div class="container">
+        <h1>Organization Donation Drop-off Schedule</h1>
+
+        <h2>Schedule Selection</h2>
+        <label for="schedule">Select Drop-off Time Slot:</label>
+        <select id="schedule">
+            <option value="morning">Morning (9:00 AM - 12:00 PM)</option>
+            <option value="afternoon">Afternoon (1:00 PM - 4:00 PM)</option>
+            <option value="evening">Evening (5:00 PM - 8:00 PM)</option>
+        </select>
+
+        <button onclick="scheduleDropOff()">Schedule Drop-off</button>
+    </div>
+
+    <script>
+       
+        function navigateToDashboard() {
+        window.location.href = 'Dashboard.html';
+    }
+        function scheduleDropOff() {
+            const schedule = document.getElementById('schedule').value;
+            
+            // Save schedule to local storage
+            localStorage.setItem('organizationDropOffSchedule', schedule);
+            
+            alert('Drop-off schedule saved successfully!');
+            window.location.href = 'eta2.html';
+        }
+        
+    </script>
+ 
+       
+</body>
+</html>

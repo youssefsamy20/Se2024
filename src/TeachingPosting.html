@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Donation Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff; /* Light blue background */
+            color: #333; /* Dark grey text color */
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #e6f7ff; /* Light blue container */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        h1 {
+            text-align: center;
+            color: #007bff; /* Primary blue heading color */
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #007bff; /* Primary blue label color */
+        }
+        select, input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff; /* White input background */
+        }
+        .donation-details {
+            display: none;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff; /* Primary blue button background */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        #dashboardButton {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #4a7cff, #68e0cf);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin: 20px auto; /* Center the button horizontally and add margin at the top */
+}
+
+#dashboardButton:hover {
+    background: linear-gradient(135deg, #70a1ff, #7ee5b8);
+    transform: translateY(-2px);
+}
+    </style>
+    <div style="text-align: center; margin-top: 20px;">
+        <button id="dashboardButton" onclick="navigateToDashboard()">Go to Dashboard</button>
+    </div>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Donation Post</h1>
+        <label for="category">Select Category:</label>
+        <select id="category" required onchange="showDonationDetails()">
+            <option value="">Select Category</option>
+           
+            <option value="school_supplies">School Supplies</option>
+          
+            <option value="teaching">Teaching</option>
+           
+        </select><br>
+
+<div id="school_supplies" class="donation-details">
+    <label for="SchoolQuantity">Quantity:</label>
+    <input id="SchoolQuantity" type="number" min="1"><br>
+    <label for="supplyType">Select Type:</label>
+    <select id="supplyType" required onchange="showSupplyDetails()">
+        <option value="">Select Type</option>
+        <option value="books">Books</option>
+        <option value="stationary">Stationary</option>
+    </select><br>
+    <div id="books" class="donation-details">
+        <label for="bookName">Book Name:</label>
+        <input id="bookName" type="text"><br>
+        <label for="author">Author:</label>
+        <input id="author" type="text"><br>
+        <label for="language">Language:</label>
+        <input id="language" type="text"><br>
+        <label for="edition">Edition:</label>
+        <input id="edition" type="text"><br>
+        <label for="summary">Summary:</label>
+        <textarea id="summary" rows="4"></textarea><br>
+        <label for="bookImage">Book Image:</label>
+        <input id="bookImage" type="file"><br>
+      
+   
+        <!-- Donation details for Books -->
+    </div>
+    <div id="stationary" class="donation-details">
+        <label for="itemType">Type of Item:</label>
+        <input id="itemType" type="text"><br>
+        <label for="itemDetails">Additional Details:</label>
+        <textarea id="itemDetails" rows="4"></textarea><br>
+    </div>
+</div>
+<div id="teaching" class="donation-details">
+    <label for="subject">Subject:</label>
+    <input id="subject" type="text"><br>
+
+    <label for="area">Area:</label>
+    <input id="area" type="text"><br>
+
+    <label for="teachingGovernorate">teachingGovernorate:</label>
+    <input id="teachingGovernorate" type="text"><br>
+    
+</div>
+
+<label for="moreInfo">More Info:</label>
+        <textarea id="moreInfo" rows="4"></textarea>
+        
+        <button onclick="submit()">Create Post</button>
+        
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+
+<script>
+    function showDonationDetails() {
+        var category = document.getElementById('category').value;
+        var donationDetails = document.getElementsByClassName('donation-details');
+        for (var i = 0; i < donationDetails.length; i++) {
+            donationDetails[i].style.display = 'none';
+        }
+        if (category) {
+            document.getElementById(category).style.display = 'block';
+        }
+        
+    }
+    function navigateToDashboard() {
+        window.location.href = 'DonorDashboard.html';
+    }
+    function showSupplyDetails() {
+    var supplyType = document.getElementById('supplyType').value;
+    var bookDetails = document.getElementById('books');
+    var stationaryDetails = document.getElementById('stationary');
+
+    if (supplyType === 'books') {
+        bookDetails.style.display = 'block';
+        stationaryDetails.style.display = 'none'; // Hide stationary details if books are selected
+    } else if (supplyType === 'stationary') {
+        bookDetails.style.display = 'none'; // Hide book details if stationary is selected
+        stationaryDetails.style.display = 'block';
+    } else {
+        // Hide both book and stationary details if no supply type is selected
+        bookDetails.style.display = 'none';
+        stationaryDetails.style.display = 'none';
+    }
+}
+
+    function toggleFoodQuantity() {
+        var foodType = document.getElementById('foodType').value;
+        var quantityLabel = document.getElementById('quantityLabel');
+        if (foodType === 'fruits_and_vegetables') {
+            quantityLabel.innerHTML = 'Quantity (kg):';
+        } else {
+            quantityLabel.innerHTML = 'Quantity:';
+        }
+    }
+
+    function submit() {
+        var category = document.getElementById('category').value;
+        var moreInfo = document.getElementById('moreInfo').value;
+        
+        var additionalFields = {};
+        if (category === 'clothes') {
+            additionalFields.clothesSize = document.getElementById('clothesSize').value;
+            additionalFields.clothesAge = document.getElementById('clothesAge').value;
+            additionalFields.clothesGender = document.getElementById('clothesGender').value;
+            additionalFields.season = document.getElementById('season').value;
+            additionalFields.material = document.getElementById('material').value;
+            additionalFields.clothesQuantity = document.getElementById('clothesQuantity').value;
+        } else if (category === 'toys') {
+            additionalFields.toyAge = document.getElementById('toyAge').value;
+            additionalFields.toyGender = document.getElementById('toyGender').value;
+            additionalFields.toyCategory = document.getElementById('toyCategory').value;
+            additionalFields.toyQuantity = document.getElementById('toyQuantity').value;
+        } else if (category === 'food') {
+            additionalFields.foodType = document.getElementById('foodType').value;
+            additionalFields.foodQuantity = document.getElementById('foodQuantity').value;
+        } else if (category === 'medical_supplies') {
+            additionalFields.medicalSupplyType = document.getElementById('medicalSupplyType').value;
+            additionalFields.deviceType = document.getElementById('deviceType').value;
+            additionalFields.use = document.getElementById('use').value;
+            additionalFields.medicalQuantity = document.getElementById('medicalQuantity').value;
+            if (document.getElementById('image').files.length > 0) {
+                additionalFields.image = document.getElementById('image').files[0].name; // only storing file name for simplicity
+            }
+        } else if (category === 'school_supplies') {
+            additionalFields.supplyType = document.getElementById('supplyType').value;
+            additionalFields.SchoolQuantity = document.getElementById('SchoolQuantity').value;
+            // nested details handling could be implemented similarly
+            if (additionalFields.supplyType === 'books') {
+            additionalFields.bookName = document.getElementById('bookName').value;
+            additionalFields.author = document.getElementById('author').value;
+            additionalFields.language = document.getElementById('language').value;
+            additionalFields.edition = document.getElementById('edition').value;
+            additionalFields.summary = document.getElementById('summary').value;
+            if (document.getElementById('bookImage').files.length > 0) {
+                additionalFields.bookImage = document.getElementById('bookImage').files[0].name; // only storing file name for simplicity
+            }
+
+        }
+        else if (additionalFields.supplyType === 'stationary') {
+        additionalFields.itemType = document.getElementById('itemType').value;
+        additionalFields.itemDetails = document.getElementById('itemDetails').value;
+    }
+        }
+        else if (category === 'medical_case') {
+    // Medical case details
+    additionalFields.patientName = document.getElementById('patientName').value;
+    additionalFields.patientAge = document.getElementById('patientAge').value;
+    additionalFields.patientGender = document.getElementById('patientGender').value;
+    additionalFields.patientWeight = document.getElementById('patientWeight').value;
+    additionalFields.patientLocation = document.getElementById('patientLocation').value;
+    additionalFields.patientAddress = document.getElementById('patientAddress').value;
+    additionalFields.organizationName = document.getElementById('organizationName').value;
+    additionalFields.medicalSpecialty = document.getElementById('medicalSpecialty').value;
+    additionalFields.caseDescription = document.getElementById('caseDescription').value;
+}
+        else if (category === 'teaching') {
+additionalFields.subject = document.getElementById('subject').value;
+additionalFields.area = document.getElementById('area').value;
+additionalFields.teachingGovernorate = document.getElementById('teachingGovernorate').value;}
+
+         else if (category === 'blood_donations') {
+            additionalFields.patientName = document.getElementById('patientName').value;
+            additionalFields.bloodType = document.getElementById('bloodType').value;
+            additionalFields.hospitalName = document.getElementById('hospitalName').value;
+            additionalFields.hospitalArea = document.getElementById('hospitalArea').value;
+            additionalFields.governorate = document.getElementById('governorate').value;
+            additionalFields.hospitalAddress = document.getElementById('hospitalAddress').value;
+        }
+        
+
+        var donationPosts = JSON.parse(localStorage.getItem('donationPosts')) || [];
+        donationPosts.push({
+            category: category,
+            moreInfo: moreInfo,
+            ...additionalFields
+        });
+        localStorage.setItem('donationPosts', JSON.stringify(donationPosts));
+        window.location.href = 'TeachingCases.html';
+    }
+</script>
+</body>
+</html>

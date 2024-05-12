@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Donations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #dc3545;
+        }
+        .donation-item {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .donation-item:hover {
+            transform: translateY(-5px);
+        }
+        .donation-category {
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+        .donation-details {
+            list-style-type: none;
+            padding: 0;
+        }
+        .donation-details li {
+            margin-bottom: 10px;
+        }
+        .donate-button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .donation-form {
+            display: none;
+            margin-top: 10px;
+        }
+        .donation-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .donation-form input[type="text"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .donate-button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 10px; /* Add margin between buttons */
+}
+
+
+        .notification {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .notification button {
+    background-color: #6c8095; /* Blue background color */
+    color: #fff; /* White text color */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-right: 10px; /* Add some space between buttons */
+    transition: background-color 0.3s ease-in-out; /* Smooth transition on hover */
+}
+
+.notification button:hover {
+    background-color: #0056b3; /* Darker blue color on hover */
+}
+
+    </style>
+    <button class="donate-button dashboard-button" onclick="redirectToDashboard()">Return To Dashboard</button>
+</head>
+<body>
+    <h1>Medical Donations</h1>
+    <ul id="medicalDonationsList"></ul>
+    <div id="notification"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var medicalDonations = JSON.parse(localStorage.getItem('donationPosts')) || [];
+            var medicalDonationsList = document.getElementById('medicalDonationsList');
+            var lastValidDonation = null;
+            medicalDonations.forEach(function(donation, index) {
+                if (donation.category === 'medical_case' || donation.category === 'medical_supplies' || donation.category === 'blood_donations') {
+                    var listItem = document.createElement('li');
+                    listItem.classList.add('donation-item');
+                    var donationDetails = document.createElement('ul');
+                    donationDetails.classList.add('donation-details');
+
+                    // Add donation category
+                    var categoryItem = document.createElement('li');
+                    categoryItem.classList.add('donation-category');
+                    categoryItem.textContent = donation.category.replace('_', ' ');
+                    donationDetails.appendChild(categoryItem);
+
+                    for (var key in donation) {
+                        if (key !== 'category' && key !== 'moreInfo') {
+                            var detailItem = document.createElement('li');
+                            detailItem.textContent = key.replace(/([a-z])([A-Z])/g, '$1 $2') + ': ' + donation[key];
+                            donationDetails.appendChild(detailItem);
+                        }
+                    }
+
+                    // Add edit button and form
+                    var editButton = document.createElement('button');
+                    editButton.classList.add('donate-button');
+                    editButton.textContent = 'Edit';
+                    listItem.appendChild(donationDetails);
+                    listItem.appendChild(editButton);
+                    var deleteButton = document.createElement('button');
+            deleteButton.classList.add('donate-button');
+            deleteButton.textContent = 'Delete';
+            listItem.appendChild(deleteButton);
+                    medicalDonationsList.appendChild(listItem);
+
+                    editButton.addEventListener('click', function() {
+                        var donationForm = document.createElement('form');
+                        donationForm.classList.add('donation-form');
+                        for (var key in donation) {
+                            if (key !== 'category' && key !== 'moreInfo') {
+                                var label = document.createElement('label');
+                                label.textContent = key.replace(/([a-z])([A-Z])/g, '$1 $2') + ':';
+                                var input = document.createElement('input');
+                                input.setAttribute('type', 'text');
+                                input.setAttribute('name', key);
+                                input.setAttribute('value', donation[key]);
+                                input.setAttribute('placeholder', 'Enter ' + key.replace(/([a-z])([A-Z])/g, '$1 $2'));
+                                donationForm.appendChild(label);
+                                donationForm.appendChild(input);
+                            }
+                        }
+                        var submitButton = document.createElement('input');
+                        submitButton.setAttribute('type', 'submit');
+                        submitButton.setAttribute('value', 'Submit');
+                        donationForm.appendChild(submitButton);
+                        listItem.appendChild(donationForm);
+                        editButton.style.display = 'none'; // Hide the edit button after clicking
+
+                        // Form submission handling
+                        donationForm.addEventListener('submit', function(event) {
+                            event.preventDefault();
+                            // Handle form submission, for example, updating the post
+                            for (var key in donation) {
+                                if (key !== 'category' && key !== 'moreInfo') {
+                                    donation[key] = donationForm.elements[key].value;
+                                }
+                            }
+                            // Update the UI with the new data
+                            listItem.removeChild(donationForm);
+                            listItem.removeChild(editButton);
+                            listItem.appendChild(donationDetails);
+                            listItem.appendChild(editButton);
+                            // You can replace the following line with your desired redirection logic
+                            localStorage.setItem('donationPosts', JSON.stringify(medicalDonations));
+                        });
+                        donationForm.style.display = 'block'; // Display the form
+                    });
+                    deleteButton.addEventListener('click', function() {
+                medicalDonations.splice(index, 1); // Remove the item from the array
+                medicalDonationsList.removeChild(listItem); // Remove the item from the DOM
+                localStorage.setItem('donationPosts', JSON.stringify(medicalDonations)); // Update local storage
+            });
+            medicalDonationsList.appendChild(listItem);
+            lastValidDonation = donation; // Update last valid post
+                }
+
+                // Show notification for the last post
+              
+            });
+            if (lastValidDonation) {
+        setTimeout(function() {
+            showNotification(lastValidDonation);  // Show notification for the last valid post
+        }, 5000);}
+        });
+        
+        function redirectToDashboard() {
+    // Add your logic to redirect to the dashboard page
+    window.location.href = 'dashboard.html'; // Replace 'dashboard.html' with your actual dashboard page URL
+}
+
+        function showNotification(post) {
+            var notificationDiv = document.getElementById('notification');
+            var notificationMessage = document.createElement('div');
+            notificationMessage.classList.add('notification');
+            notificationMessage.innerHTML = `
+                A donor has accepted your offer for the following post:
+                <h2>Category: ${post.category}</h2>
+                <p>Details: ${post.moreInfo}</p>
+                ${getAdditionalDetails(post)}
+                <button onclick="schedulePickup()">Schedule Pickup</button>
+                <button onclick="viewDonorDetails('${post.category}')">View Donor Details</button>
+            `;
+            notificationDiv.appendChild(notificationMessage);
+        }
+
+        function getAdditionalDetails(post) {
+            var detailsHtml = '';
+            for (var key in post) {
+                if (key !== 'category' && key !== 'moreInfo') {
+                    detailsHtml += `<p>${key}: ${post[key]}</p>`;
+                }
+            }
+            return detailsHtml;
+        }
+
+        function schedulePickup() {
+            // Add your logic to schedule pickup here
+            // For example, you could redirect to a pickup scheduling page
+            window.location.href = 'OrgPickup.html';
+        }
+
+        function viewDonorDetails(category) {
+            if (category === 'medical_case') {
+                window.location.href = 'doctor.html';
+            } else {
+                window.location.href = 'RegularDonor.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmed Organizations</title>
+    <style>
+        
+        .navigation-buttons {
+      
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .navigation-buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: #181819;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .navigation-buttons button:hover {
+            background-color: #0056b3;
+        }
+        #showNavigationButton {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            margin-bottom: 20px;
+            /* Adjust button height */
+            margin-top: 6000px /* Added margin for spacing */
+        }
+        #showNavigationButton:hover {
+            background-color: #0056b3;
+        }
+    
+        /* Include necessary CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        header {
+            background-color: #333333;
+            color: #fff;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        /* Add more CSS styles as needed */
+        .confirmed-list {
+            margin: 20px;
+        }
+        .confirmed-item {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .confirmed-item h3 {
+            margin-top: 0;
+        }
+        #organizationSearchInput,
+        #areaFilter,
+        #governorateFilter,
+        #typeFilter {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .navigation-buttons button:hover {
+            background-color: #0056b3;
+        }
+
+        /* New style for the single button */
+        #dashboardButton {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #040f2a, #044b41);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin: 20px auto; /* Center the button horizontally and add margin at the top */
+}
+
+#dashboardButton:hover {
+    background: linear-gradient(135deg, #70a1ff, #7ee5b8);
+    transform: translateY(-2px);
+}
+        
+    </style>
+</head>
+<body>
+    <button id="dashboardButton" onclick="navigateTo('DonorDashboard.html')">Go to Dashboard</button>
+    <!-- Navigation buttons -->
+   
+    <header>
+        <h1>Confirmed Registered Organizations</h1>
+    </header>
+    
+    <section id="confirmedOrganizations">
+        <h2>Confirmed Registered Organizations</h2>
+        <input type="text" id="organizationSearchInput" placeholder="Search by organization name">
+        <select id="areaFilter">
+            <option value="">Filter by Area</option>
+            <!-- Add options dynamically using JavaScript -->
+        </select>
+        <select id="governorateFilter">
+            <option value="">Filter by Governorate</option>
+            <!-- Add options dynamically using JavaScript -->
+        </select>
+        <select id="typeFilter">
+            <option value="">Filter by Organization Type</option>
+            <!-- Add options dynamically using JavaScript -->
+        </select>
+        <div id="confirmedOrganizationList" class="confirmed-list"></div>
+    </section>
+
+    <script>
+            
+
+        // Function to navigate to a specific page
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+       function displayConfirmedOrganizations(searchTerm = '', areaFilter = '', governorateFilter = '', typeFilter = '') {
+    // Function body
+    const confirmedOrganizations = JSON.parse(localStorage.getItem('confirmedOrganizations')) || [];
+    const confirmedOrganizationList = document.getElementById('confirmedOrganizationList');
+
+    // Clear previous content
+    confirmedOrganizationList.innerHTML = '';
+
+    // Filter organizations based on search term and filters
+    const filteredOrganizations = confirmedOrganizations.filter(organization => {
+        const isMatchedSearchTerm = organization.orgName.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const isMatchedArea = areaFilter === '' || organization.orgArea.toLowerCase() === areaFilter.toLowerCase();
+        const isMatchedGovernorate = governorateFilter === '' || organization.orgGovernorate.toLowerCase() === governorateFilter.toLowerCase();
+        const isMatchedType = typeFilter === '' || organization.orgType.toLowerCase() === typeFilter.toLowerCase();
+        return isMatchedSearchTerm && isMatchedArea && isMatchedGovernorate && isMatchedType;
+    });
+
+    // Display filtered organizations
+    filteredOrganizations.forEach(organization => {
+        const confirmedItem = document.createElement('div');
+        confirmedItem.classList.add('confirmed-item');
+        confirmedItem.innerHTML = `
+            <h3>Organization Details</h3>
+            <p><strong>First Name:</strong> ${organization.orgFirstName}</p>
+                <p><strong>Last Name:</strong> ${organization.orgLastName}</p>
+                <p><strong>Gender:</strong> ${organization.orgGender}</p>
+                <p><strong>Email:</strong> ${organization.orgEmail}</p>
+                <p><strong>Password:</strong> ${organization.orgPassword}</p>
+                <p><strong>Contact Number:</strong> ${organization.orgContactNumber}</p>
+                <p><strong>Name:</strong> ${organization.orgName}</p>
+                <p><strong>Area:</strong> ${organization.orgArea}</p>
+                <p><strong>Governorate:</strong> ${organization.orgGovernorate}</p>
+                <p><strong>Type:</strong> ${organization.orgType}</p>
+                <p><strong>Verification Document:</strong> ${organization.verificationDocument}</p>
+                <button onclick="viewLocation('${organization.orgName}', '${organization.orgArea}', '${organization.orgGovernorate}')">View Pinned Location</button>
+        `;
+        confirmedOrganizationList.appendChild(confirmedItem);
+    });
+}
+
+        // Call displayConfirmedOrganizations() initially to load all confirmed organizations
+        displayConfirmedOrganizations();
+
+        // Add event listener to search input for live search
+        document.getElementById('organizationSearchInput').addEventListener('input', function() {
+            const searchTerm = this.value.trim();
+            displayConfirmedOrganizations(searchTerm);
+        });
+
+        // Add event listeners to filters for live filtering
+        document.getElementById('areaFilter').addEventListener('change', function() {
+            const areaFilter = this.value.trim();
+            displayConfirmedOrganizations('', areaFilter);
+        });
+
+        document.getElementById('governorateFilter').addEventListener('change', function() {
+            const governorateFilter = this.value.trim();
+            displayConfirmedOrganizations('', '', governorateFilter);
+        });
+
+        document.getElementById('typeFilter').addEventListener('change', function() {
+            const typeFilter = this.value.trim();
+            displayConfirmedOrganizations('', '', '', typeFilter);
+        });
+
+        // Populate filter options
+        function populateFilterOptions() {
+    const confirmedOrganizations = JSON.parse(localStorage.getItem('confirmedOrganizations')) || [];
+    const areas = [...new Set(confirmedOrganizations.map(org => org.orgArea))];
+    const governorates = [...new Set(confirmedOrganizations.map(org => org.orgGovernorate))];
+    const types = [...new Set(confirmedOrganizations.map(org => org.orgType))];
+
+    // Populate area filter options
+    const areaFilterSelect = document.getElementById('areaFilter');
+    areas.forEach(area => {
+        const option = document.createElement('option');
+        option.value = area;
+        option.textContent = area;
+        areaFilterSelect.appendChild(option);
+    });
+
+    // Populate governorate filter options
+    const governorateFilterSelect = document.getElementById('governorateFilter');
+    governorates.forEach(governorate => {
+        const option = document.createElement('option');
+        option.value = governorate;
+        option.textContent = governorate;
+        governorateFilterSelect.appendChild(option);
+    });
+   
+    // Populate organization type filter options
+    const typeFilterSelect = document.getElementById('typeFilter');
+    types.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+        typeFilterSelect.appendChild(option);
+    });
+}
+function viewLocation(orgName, orgArea, orgGovernorate) {
+            // Redirect to map.html with organization details as query parameters
+            window.location.href = `map.html?orgName=${encodeURIComponent(orgName)}&orgArea=${encodeURIComponent(orgArea)}&orgGovernorate=${encodeURIComponent(orgGovernorate)}`;
+        }
+        // Call populateFilterOptions() to populate filter options
+        populateFilterOptions();
+    </script>
+</body>
+</html>

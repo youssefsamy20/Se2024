@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Donation Posts</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .donation-post {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .donation-post h2 {
+            margin-top: 0;
+        }
+        button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .accept-btn {
+            background-color: #28a745;
+        }
+        .reject-btn {
+            background-color: #dc3545;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>View Donation Posts</h1>
+        <!-- Add filters for age, gender, and season -->
+        <label for="ageFilter">Filter by Age:</label>
+        <input type="text" id="ageFilter" placeholder="Enter age" oninput="searchByCategory()">
+        <label for="genderFilter">Filter by Gender:</label>
+        <select id="genderFilter" onchange="searchByCategory()">
+            <option value="all">All Genders</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+        <label for="seasonFilter">Filter by Season:</label>
+        <select id="seasonFilter" onchange="searchByCategory()">
+            <option value="all">All Seasons</option>
+            <option value="summer">Summer</option>
+            <option value="winter">Winter</option>
+            <option value="spring">Spring</option>
+            <option value="autumn">Autumn</option>
+        </select>
+        
+        <!-- Input for category search -->
+        <input type="text" id="categoryInput" placeholder="Enter category name" oninput="searchByCategory()">
+        <select id="categorySelect" onchange="searchByCategory()">
+            <option value="all">All Categories</option>
+            <option value="clothes">Clothes</option>
+            <option value="toys">Toys</option>
+            <option value="food">Food</option>
+            <option value="medical supplies">Medical Supplies</option>
+            <option value="school supplies">School Supplies</option>
+            <option value="blood donations">Blood Donations</option>
+        </select>
+        
+        <div id="donationPosts">
+            <!-- Donation posts will be displayed here -->
+        </div>
+    </div>
+    
+    <script>
+        // Retrieve donation posts from localStorage
+        var donationPosts = JSON.parse(localStorage.getItem('donationPosts')) || [];
+        
+        // Display all donation posts by default
+        displayDonationPosts(donationPosts);
+        
+        // Function to display donation posts
+        function displayDonationPosts(posts) {
+            var donationPostsContainer = document.getElementById('donationPosts');
+            donationPostsContainer.innerHTML = '';
+            posts.forEach(function(post, index) {
+                var postDiv = document.createElement('div');
+                postDiv.classList.add('donation-post');
+                postDiv.innerHTML = `
+                    <h2>${post.category}</h2>
+                    <p>${post.moreInfo}</p>
+                    <button class="accept-btn" onclick="acceptPost(${index})">Accept</button>
+                    <button class="reject-btn" onclick="rejectPost(${index})">Reject</button>
+                `;
+                donationPostsContainer.appendChild(postDiv);
+            });
+        }
+
+        // Accept donation post
+        function acceptPost(index) {
+            var confirmAccept = confirm('Are you sure you want to accept this post?');
+            if (confirmAccept) {
+                // Handle acceptance logic here
+                // You can redirect or perform any other action
+            }
+        }
+
+        // Reject donation post
+        function rejectPost(index) {
+            var confirmReject = confirm('Are you sure you want to reject this post?');
+            if (confirmReject) {
+                // Handle rejection logic here
+                // You can redirect or perform any other action
+            }
+        }
+
+        // Function to filter donation posts by category, age, gender, and season
+        function searchByCategory() {
+            var categoryInput = document.getElementById('categoryInput').value.trim().toLowerCase();
+            var categorySelect = document.getElementById('categorySelect');
+            var selectedCategory = categorySelect.value;
+            var ageFilter = document.getElementById('ageFilter').value.trim().toLowerCase();
+            var genderFilter = document.getElementById('genderFilter').value;
+            var seasonFilter = document.getElementById('seasonFilter').value;
+            
+            var filteredPosts = donationPosts.filter(function(post) {
+                var matchesCategory = selectedCategory === 'all' || post.category.toLowerCase().includes(categoryInput);
+                var matchesAge = ageFilter === '' || post.age.toLowerCase() === ageFilter;
+                var matchesGender = genderFilter === 'all' || post.gender === genderFilter;
+                var matchesSeason = seasonFilter === 'all' || post.season === seasonFilter;
+                return matchesCategory && matchesAge && matchesGender && matchesSeason;
+            });
+
+            // Display filtered donation posts
+            displayDonationPosts(filteredPosts);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Donations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #dc3545;
+        }
+        #medicalDonationsList {
+            list-style-type: none;
+            padding: 0;
+        }
+        .donation-item {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .donation-item:hover {
+            transform: translateY(-5px);
+        }
+        .donation-category {
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+        .donation-details {
+            list-style-type: none;
+            padding: 0;
+        }
+        .donation-details li {
+            margin-bottom: 10px;
+        }
+        .donate-button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .donation-form {
+            display: none;
+            margin-top: 10px;
+        }
+        .donation-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .donation-form input[type="text"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .navigation-buttons {
+    text-align: center; /* Center the content horizontally */
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.navigation-buttons button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #ac1b1b;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.navigation-buttons button:hover {
+    background-color: #0056b3;
+}
+#dashboardButton {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #bc662d, #e09c68);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin: 20px auto; /* Center the button horizontally and add margin at the top */
+}
+
+#dashboardButton:hover {
+    background: linear-gradient(135deg, #e0ff70, #7ee5b8);
+    transform: translateY(-2px);
+}
+.donate-button {
+    margin-right: 10px; /* Add space to the right of the button */
+}
+.view-location-button, .view-supplies-button {
+    background-color: #dc3545; /* Change button color to red */
+    color: #fff; /* Change text color to white */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.view-location-button:hover, .view-supplies-button:hover {
+    background-color: #c82333; /* Darken button color on hover */
+}
+#filterSelect,
+        #filterOrganizationName,
+        #filterArea,
+        #filterGovernorate,
+        #medicalSpecialty,
+        #filterMedicalSupplyType {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* Ensure padding and border are included in the width */
+        }
+
+        /* New styles for filter button */
+        #filterButton {
+            width: 100%;
+            padding: 10px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        #filterButton:hover {
+            background-color: #c82333;
+        }
+
+    </style>
+    
+    
+        <div style="text-align: center; margin-top: 20px;">
+            <button id="dashboardButton" onclick="navigateToDashboard()">Go to Dashboard</button>
+        </div>
+    <script>
+        function redirectToConfirmed() {
+            window.location.href = 'DonorsSearchOrgs.html';
+        }
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+    </script>
+        
+    <select id="filterSelect">
+        <option value="all">All</option>
+        <option value="medical_case">medical_case</option>
+        <option value="medical_supplies">medical_supplies</option>
+        <option value="blood_donations">blood_donations</option>
+    </select>
+    <input type="text" id="filterOrganizationName" placeholder="Organization Name">
+    <input type="text" id="filterArea" placeholder="Case Area">
+    <input type="text" id="filterGovernorate" placeholder="Case Governorate">
+    <input type="text" id="medicalSpecialty" placeholder="Medical Specialty">
+    <input type="text" id="filterMedicalSupplyType" placeholder="Medical Supply Type">
+
+   
+</head>
+<body>
+    <h1>Medical Donations</h1>
+    <ul id="medicalDonationsList"></ul>
+    <script>
+        function displayItems(filter) {
+    const medicalDonations = JSON.parse(localStorage.getItem('donationPosts')) || [];
+    const medicalDonationsList = document.getElementById('medicalDonationsList');
+    const filterOrganizationName = document.getElementById('filterOrganizationName').value.toLowerCase();
+    const filterArea = document.getElementById('filterArea').value.toLowerCase();
+    const filterGovernorate = document.getElementById('filterGovernorate').value.toLowerCase();
+    const medicalSpecialty = document.getElementById('medicalSpecialty').value.toLowerCase();
+    const filterMedicalSupplyType = document.getElementById('filterMedicalSupplyType').value.toLowerCase(); // Added filter for medical supply type
+
+    medicalDonationsList.innerHTML = '';
+
+    medicalDonations.forEach(function(donation) {
+        if (filter === 'all' || donation.category === filter) {
+            if ((donation.category === 'medical_case' && (
+                    (filterOrganizationName === '' || donation.organizationName.toLowerCase().includes(filterOrganizationName)) &&
+                    (filterArea === '' || donation.CaseArea.toLowerCase().includes(filterArea)) &&
+                    (filterGovernorate === '' || donation.CaseGovernorate.toLowerCase().includes(filterGovernorate)) &&
+                    (medicalSpecialty === '' || donation.medicalSpecialty.toLowerCase().includes(medicalSpecialty))
+                )) ||
+                (donation.category === 'medical_supplies' && // Filter medical supplies by type
+                    (filterMedicalSupplyType === '' || donation.medicalSupplyType.toLowerCase().includes(filterMedicalSupplyType))
+                ) ||
+                donation.category === 'blood_donations') {
+                createDonationItem(donation);
+            }
+        }
+    });
+}
+
+
+        function createDonationItem(donation) {
+            const medicalDonationsList = document.getElementById('medicalDonationsList');
+
+            const listItem = document.createElement('li');
+            listItem.classList.add('donation-item');
+            const donationDetails = document.createElement('ul');
+            donationDetails.classList.add('donation-details');
+
+            const categoryItem = document.createElement('li');
+            categoryItem.classList.add('donation-category');
+            categoryItem.textContent = donation.category.replace('_', ' ');
+            donationDetails.appendChild(categoryItem);
+
+            for (const key in donation) {
+                if (key !== 'category' && key !== 'moreInfo') {
+                    const detailItem = document.createElement('li');
+                    detailItem.textContent = key.replace(/([a-z])([A-Z])/g, '$1 $2') + ': ' + donation[key];
+                    donationDetails.appendChild(detailItem);
+                }
+            }
+
+            const donateButton = document.createElement('button');
+            donateButton.classList.add('donate-button');
+            donateButton.textContent = 'Donate';
+            listItem.appendChild(donationDetails);
+            listItem.appendChild(donateButton);
+            medicalDonationsList.appendChild(listItem);
+
+            if (donation.category === 'medical_case') {
+        const viewLocationButton = document.createElement('button');
+        viewLocationButton.textContent = 'View Pin Location';
+        viewLocationButton.classList.add('view-location-button');
+        listItem.appendChild(viewLocationButton);
+
+        viewLocationButton.addEventListener('click', function() {
+            window.location.href = 'map.html';
+        });
+        
+    }
+    if (donation.category === 'medical_supplies') {
+                const viewSuppliesButton = document.createElement('button');
+                viewSuppliesButton.textContent = 'View Supplies';
+                viewSuppliesButton.classList.add('view-supplies-button');
+                listItem.appendChild(viewSuppliesButton);
+
+                // Add event listener for the view supplies button
+                viewSuppliesButton.addEventListener('click', function() {
+                    window.location.href = 'image.html'; // Redirect to image.html
+                });}
+                
+            donateButton.addEventListener('click', function() {
+                showDonationForm(donation, listItem, donateButton);
+            });
+        }
+
+        function showDonationForm(donation, listItem, donateButton) {
+            const donationForm = document.createElement('form');
+            donationForm.classList.add('donation-form');
+            for (const key in donation) {
+                if (key !== 'category' && key !== 'moreInfo') {
+                    const label = document.createElement('label');
+                    label.textContent = key.replace(/([a-z])([A-Z])/g, '$1 $2') + ':';
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = key;
+                    input.placeholder = 'Enter ' + key.replace(/([a-z])([A-Z])/g, '$1 $2');
+                    donationForm.appendChild(label);
+                    donationForm.appendChild(input);
+                }
+            }
+            const submitButton = document.createElement('input');
+            submitButton.type = 'submit';
+            submitButton.value = 'Submit';
+            donationForm.appendChild(submitButton);
+            listItem.appendChild(donationForm);
+            donateButton.style.display = 'none'; // Hide the donate button after clicking
+
+            donationForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                window.location.href = 'TransportationManagement.html'; // Form submission logic
+            });
+            donationForm.style.display = 'block'; // Display the form
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterSelect = document.getElementById('filterSelect');
+
+            displayItems('all'); // Initial display of medical cases
+
+            filterSelect.addEventListener('change', function() {
+                displayItems(this.value);
+            });
+             // Initial display of all types of medical donations
+
+            const filterInputs = document.querySelectorAll('input[type="text"]');
+            filterInputs.forEach(function(input) {
+                input.addEventListener('input', function() {
+                    displayItems(filterSelect.value);
+                });
+            });
+        });
+        function viewDonorrrDetails() {
+            window.location.href = 'DoctorDetails.html'; // Redirect to donor_details.html
+        }
+        displayDoctorDetails();
+        function navigateToDashboard() {
+        window.location.href = 'DonorDashboard.html';
+    }
+    </script>
+</body>
+</html>

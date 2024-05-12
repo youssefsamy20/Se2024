@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Estimated Time of Arrival</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        p {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .notification {
+            display: none;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .navigation-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .navigation-buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: #1ebd4d;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .navigation-buttons button:hover {
+            background-color: #0056b3;
+        }
+        #showNavigationButton {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4a7cff, #68e0cf);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 20px auto; /* Center the button */
+            display: block; /* Show the button */
+        }
+        #showNavigationButton:hover {
+            background: linear-gradient(135deg, #70a1ff, #7ee5b8);
+            transform: translateY(-2px);
+        }
+        .gratitude-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 20px;
+            font-style: italic;
+            color: #333;
+            border: 2px solid #4CAF50; /* Green border */
+            background-color: #95ca97; /* Green background */
+            border-radius: 8px; /* Rounded corners */
+            padding: 20px; /* Padding for better appearance */
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
+<body>
+    <div class="gratitude-message" id="gratitudeMessage">
+        <!-- The gratitude message will be dynamically updated -->
+    </div>
+    <div class="container">
+        <h1>Estimated Time of Arrival (ETA)</h1>
+        
+        <p>The driver is scheduled to arrive at your location:</p>
+
+        <!-- Display the estimated time of arrival (ETA) based on the selected time slot -->
+        <div id="eta"></div>
+        
+        <!-- Notification section -->
+        <div class="notification" id="driverNotification">
+            <!-- The notification message will be dynamically updated -->
+        </div>
+        
+        <!-- New single button for dashboard -->
+        <button id="showNavigationButton" onclick="navigateTo('DonorDashboard.html')">Go to Dashboard</button>
+        <div class="navigation-buttons">
+            <button onclick="navigateToMap()">View Drivers Live Location Now</button>
+            <button id="backToBookingButton" onclick="backToTransportationBooking()">Back to Transportation Booking</button>
+        </div>
+        <!-- Navigation buttons -->
+        
+    </div>
+    <div class="gratitude-message" id="gratitudeMessage">
+        <!-- The gratitude message will be dynamically updated -->
+    </div>
+    <script>
+        // Retrieve selected time slot from local storage
+        const selectedSchedule = localStorage.getItem('donationSchedule');
+
+        // Calculate ETA based on the selected time slot
+        let eta;
+        if (selectedSchedule === 'morning') {
+            eta = '11:00 AM';
+        } else if (selectedSchedule === 'afternoon') {
+            eta = '2:30 PM';
+        } else if (selectedSchedule === 'evening') {
+            eta = '6:00 PM';
+        }
+        
+        // Display the calculated ETA
+        document.getElementById('eta').innerHTML = "<p>" + eta + "</p>";
+
+        // Display "The driver is about to arrive!" after 5 seconds
+        setTimeout(() => {
+            document.getElementById('driverNotification').innerText = 'The driver will arrive in 5 Minutes!';
+            document.getElementById('driverNotification').style.display = 'block';
+        }, 5000);
+
+        // Display "The driver has arrived!" after an additional 5 seconds (total 10 seconds)
+        setTimeout(() => {
+            document.getElementById('driverNotification').innerText = 'The driver has arrived, His Number is 0123623728!';
+        }, 10000);
+        setTimeout(() => {
+            const gratitudeMessage = document.getElementById('gratitudeMessage');
+            gratitudeMessage.style.display = 'block'; // Display the gratitude message
+            gratitudeMessage.innerHTML = `
+                <p>Thank you for your generosity!</p>
+                <p>Your support makes a real difference.</p>
+                <p>We appreciate your kindness and dedication.</p>
+            `;
+        }, 15000);
+
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+        function backToTransportationBooking() {
+            window.location.href = 'TransportationManagement.html'; // Replace with the actual URL of your transportation booking page
+        }
+        function navigateToMap() {
+            window.location.href = 'map.html';
+        }
+    </script>
+</body>
+</html>

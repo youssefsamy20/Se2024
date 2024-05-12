@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Non-Profit Dashboard</title>
+    <style>
+        body, html {
+            padding: 0;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        nav {
+            background-color: #34495e;
+            padding: 0.5rem;
+            margin-bottom: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        section {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .approve {
+            background-color: #27ae60;
+        }
+
+        .reject {
+            background-color: #e74c3c;
+        }
+
+        .submit {
+            background-color: #2980b9;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+  <script src="src/js/app.js"></script>
+<!-- Create Donation Post for Organizations -->
+<section id="createDonationPost">
+  <h2>Create Donation Post for Organizations</h2>
+  <form id="createDonationPostForm">
+      <div class="form-group">
+          <label for="postTitle">Post Title:</label>
+          <input type="text" id="postTitle" name="postTitle" required>
+      </div>
+      <div class="form-group">
+          <label for="postDescription">Post Description:</label>
+          <textarea id="postDescription" name="postDescription" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn submit">Create Post</button>
+  </form>
+</section>
+
+<!-- Update/Delete Donation Posts for Organizations -->
+<section id="updateDeleteDonationPosts">
+  <h2>Update/Delete Donation Posts for Organizations</h2>
+  <ul>
+      <li>
+          <strong>Title:</strong> Donation Post 1
+          <button class="btn update">Update</button>
+          <button class="btn delete">Delete</button>
+      </li>
+      <li>
+          <strong>Title:</strong> Donation Post 2
+          <button class="btn update">Update</button>
+          <button class="btn delete">Delete</button>
+      </li>
+      <!-- Add more donation posts as needed -->
+  </ul>
+</section>
+
+
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            <li><a href="#manageOrgRequests">Organizations</a></li>
+            <li><a href="#manageDonorRequests">Donors</a></li>
+            <li><a href="#viewOrgDetails">Org Details</a></li>
+            <li><a href="#viewDonorDetails">Donor Details</a></li>
+            <li><a href="#accountInfo">Account Settings</a></li>
+        </ul>
+    </nav>
+
+    <!-- Content Sections -->
+    <!-- Content Sections -->
+<div class="container">
+  <!-- View Organizations List -->
+  <section id="viewOrganizationsList">
+      <h2>Organizations List</h2>
+      <ul>
+          <li>Organization A</li>
+          <li>Organization B</li>
+          <li>Organization C</li>
+      </ul>
+  </section>
+
+  <!-- View Donors List -->
+  <section id="viewDonorsList">
+      <h2>Donors List</h2>
+      <ul>
+          <li>Donor X</li>
+          <li>Donor Y</li>
+          <li>Donor Z</li>
+      </ul>
+  </section>
+
+  <!-- View Registered Organizations -->
+  <section id="viewRegisteredOrganizations">
+      <h2>Registered Organizations</h2>
+      <ul>
+          <li>Registered Org 1</li>
+          <li>Registered Org 2</li>
+          <li>Registered Org 3</li>
+      </ul>
+  </section>
+
+  <!-- Search Registered Organizations -->
+  <section id="searchRegisteredOrganizations">
+      <h2>Search Registered Organizations</h2>
+      <input type="text" placeholder="Search...">
+      <button class="btn search">Search</button>
+  </section>
+
+  <!-- Filter Registered Organizations -->
+  <section id="filterRegisteredOrganizations">
+      <h2>Filter Registered Organizations</h2>
+      <select>
+          <option value="category1">Category 1</option>
+          <option value="category2">Category 2</option>
+          <option value="category3">Category 3</option>
+      </select>
+      <button class="btn filter">Apply Filter</button>
+  </section>
+
+  <!-- View Requested Donation Items -->
+  <section id="viewRequestedDonationItems">
+      <h2>Requested Donation Items</h2>
+      <ul>
+          <li>Item 1</li>
+          <li>Item 2</li>
+          <li>Item 3</li>
+      </ul>
+  </section>
+
+  <!-- Search Donation Items by Category -->
+  <section id="searchDonationItemsByCategory">
+      <h2>Search Donation Items by Category</h2>
+      <input type="text" placeholder="Category...">
+      <button class="btn search">Search</button>
+  </section>
+</div>
+
+    <div class="container">
+        <!-- Manage Organization Requests -->
+        <section id="manageOrgRequests">
+            <h2>Manage Organizational Requests</h2>
+            <div>
+                <button class="btn approve" onclick="approveRequest('Organization')">Approve</button>
+                <button class="btn reject" onclick="rejectRequest('Organization')">Reject</button>
+            </div>
+        </section>
+
+        <!-- Manage Donor Requests -->
+        <section id="manageDonorRequests">
+            <h2>Manage Donor Requests</h2>
+            <div>
+                <button class="btn approve" onclick="approveRequest('Donor')">Approve</button>
+                <button class="btn reject" onclick="rejectRequest('Donor')">Reject</button>
+            </div>
+        </section>
+
+        <!-- View Organization Details -->
+        <section id="viewOrgDetails">
+            <h2>Organization Details</h2>
+            <p><strong>Name:</strong> Example NGO</p>
+            <p><strong>Location:</strong> City, Country</p>
+        </section>
+
+        <!-- View Donor Details -->
+        <section id="viewDonorDetails">
+            <h2>Donor Details</h2>
+            <p><strong>Name:</strong> John Doe</p>
+            <p><strong>Type:</strong> Regular Donor</p>
+        </section>
+
+        <!-- Account Information -->
+        <section id="accountInfo">
+            <h2>Update Account Information</h2>
+            <form id="updateAccountForm">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn submit">Update</button>
+            </form>
+        </section>
+    </div>
+    <script src="scripts/app.js"></script>
+</body>
+</html>

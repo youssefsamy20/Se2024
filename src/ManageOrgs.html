@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Registered Organizations</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .organization {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>View Registered Organizations</h1>
+
+        <div>
+            <h2>Filter Registered Organizations</h2>
+            <!-- Filtering options -->
+            <label for="filterArea">Filter by Area:</label>
+            <input type="text" id="filterArea" placeholder="Enter area" oninput="filterByArea()">
+            
+            <label for="filterGovernorate">Filter by Governorate:</label>
+            <input type="text" id="filterGovernorate" placeholder="Enter governorate" oninput="filterByGovernorate()">
+            
+            <label for="filterOrgType">Filter by Organization Type:</label>
+            <input type="text" id="filterOrgType" placeholder="Enter organization type" oninput="filterByOrgType()">
+        </div>
+
+        <!-- Organization list -->
+        <div id="organizationList"></div>
+
+        <!-- Clear filters button -->
+        <button onclick="clearFilters()">Clear Filters</button>
+    </div>
+
+    <script>
+        // Retrieve confirmed registered organizations data from local storage
+        const confirmedOrganizations = JSON.parse(localStorage.getItem('confirmedOrganizations')) || [];
+
+        // Function to display confirmed organizations in the list
+        function displayOrganizations(organizations) {
+            const organizationListContainer = document.getElementById('organizationList');
+            organizationListContainer.innerHTML = '';
+
+            organizations.forEach(organization => {
+                const organizationElement = document.createElement('div');
+                organizationElement.classList.add('organization');
+                organizationElement.innerHTML = `
+                    <h2>${organization.name}</h2>
+                    <p>Contact Email: ${organization.email}</p>
+                    <p>Area: ${organization.area}</p>
+                    <p>Governorate: ${organization.governorate}</p>
+                    <p>Type: ${organization.orgType}</p>
+                `;
+                organizationListContainer.appendChild(organizationElement);
+            });
+        }
+
+        displayOrganizations(confirmedOrganizations);
+        
+        // Function to filter organizations by area
+        function filterByArea() {
+            const areaFilter = document.getElementById('filterArea').value.trim().toLowerCase();
+            if (!areaFilter) {
+                displayOrganizations(confirmedOrganizations);
+                return;
+            }
+            const filteredOrganizations = confirmedOrganizations.filter(org => org.area && org.area.toLowerCase().includes(areaFilter));
+            displayOrganizations(filteredOrganizations);
+        }
+
+        // Function to filter organizations by governorate
+        function filterByGovernorate() {
+            const governorateFilter = document.getElementById('filterGovernorate').value.trim().toLowerCase();
+            if (!governorateFilter) {
+                displayOrganizations(confirmedOrganizations);
+                return;
+            }
+            const filteredOrganizations = confirmedOrganizations.filter(org => org.governorate && org.governorate.toLowerCase().includes(governorateFilter));
+            displayOrganizations(filteredOrganizations);
+        }
+
+        // Function to filter organizations by type
+        function filterByOrgType() {
+            const orgTypeFilter = document.getElementById('filterOrgType').value.trim().toLowerCase();
+            if (!orgTypeFilter) {
+                displayOrganizations(confirmedOrganizations);
+                return;
+            }
+            const filteredOrganizations = confirmedOrganizations.filter(org => org.orgType && org.orgType.toLowerCase().includes(orgTypeFilter)); // Added check for orgType existence
+            displayOrganizations(filteredOrganizations);
+        }
+
+        // Function to clear filters and display all organizations
+        function clearFilters() {
+            document.getElementById('filterArea').value = '';
+            document.getElementById('filterGovernorate').value = '';
+            document.getElementById('filterOrgType').value = '';
+            displayOrganizations(confirmedOrganizations);
+        }
+    </script>
+</body>
+</html>

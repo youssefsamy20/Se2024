@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f8f8;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .summary {
+            padding: 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .summary p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .image-container {
+            border-top: 1px solid #ccc;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .error-message {
+            text-align: center;
+            color: red;
+            font-weight: bold;
+            padding: 20px;
+            background-color: #fff;
+        }
+        #dashboardButton {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #4a7cff, #68e0cf);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin: 20px auto; /* Center the button horizontally and add margin at the top */
+}
+
+#dashboardButton:hover {
+    background: linear-gradient(135deg, #70a1ff, #7ee5b8);
+    transform: translateY(-2px);
+}
+#backButton {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #2923dc, #6877ff);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto; /* Center the button horizontally and add margin at the top */
+        }
+
+        #backButton:hover {
+            background: linear-gradient(135deg, #9b70ff, #7eceff);
+            transform: translateY(-2px);
+        }
+    </style>
+    <div style="text-align: center; margin-top: 20px;">
+        <button id="dashboardButton" onclick="navigateToDashboard()">Go to Dashboard</button>
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+        <button id="backButton" onclick="navigateToManageDonationPosts()">Back to Donation Posts</button>
+    </div>
+</head>
+<body>
+    <div class="container">
+        <div class="summary">
+            <p>The Achaeans sail from the land of the Cyclops to the home of Aeolus, ruler of the winds. Aeolus presents Odysseus with a bag containing all of the winds, and he stirs up a westerly wind to guide Odysseus and his crew home. Within ten days, they are in sight of Ithaca, but Odysseus’s shipmates, who think that Aeolus has secretly given Odysseus a fortune in gold and silver, tear the bag open. The winds escape and stir up a storm that brings Odysseus and his men back to Aeolia. This time, however, Aeolus refuses to help them, certain that the gods hate Odysseus and wish to do him harm.</p>
+        </div>
+        <div class="image-container">
+            <script>
+                // Retrieve the image URL from the query parameter
+                const imageUrl = "https://images.randomhouse.com/cover/9780823444915";
+
+                // Display the image
+                if (imageUrl) {
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    document.querySelector('.image-container').appendChild(img);
+                } else {
+                    // If no image URL is provided, display a message
+                    const errorMessage = document.createElement('div');
+                    errorMessage.textContent = 'No image available.';
+                    errorMessage.classList.add('error-message');
+                    document.querySelector('.image-container').appendChild(errorMessage);
+                }
+                function navigateToDashboard() {
+        window.location.href = 'DonorDashboard.html';
+    }
+    
+    function navigateToManageDonationPosts() {
+            window.location.href = 'managadonationposts.html';
+        }
+            </script>
+        </div>
+    </div>
+</body>
+</html>

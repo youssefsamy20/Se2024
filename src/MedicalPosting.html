@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Donation Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff; /* Light blue background */
+            color: #333; /* Dark grey text color */
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #e6f7ff; /* Light blue container */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        h1 {
+            text-align: center;
+            color: #007bff; /* Primary blue heading color */
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #007bff; /* Primary blue label color */
+        }
+        select, input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff; /* White input background */
+        }
+        .donation-details {
+            display: none;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff; /* Primary blue button background */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        #map {
+            height: 300px;
+            width: 100%;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #dashboardButton {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4a7cff, #68e0cf);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto; /* Center the button horizontally and add margin at the top */
+        }
+
+        #dashboardButton:hover {
+            background: linear-gradient(135deg, #70a1ff, #7ee5b8);
+            transform: translateY(-2px);
+        }
+    </style>
+    <button id="dashboardButton" onclick="navigateTo('dashboard.html')">Go to Dashboard</button>
+</head>
+<body>
+<div class="container">
+<h1>Create Donation Post</h1>
+        <label for="category">Select Category:</label>
+        <select id="category" required onchange="showDonationDetails()">
+            <option value="">Select Category</option>
+            <option value="medical_supplies">Medical Supplies</option>
+            <option value="blood_donations">Blood Donations</option>
+            <option value="medical_case">Medical Case</option>
+        </select><br>
+
+        <div id="medical_case" class="donation-details">
+            <label for="patientName">Patient Name:</label>
+            <input id="patientName" type="text"><br>
+            <label for="patientAge">Age:</label>
+            <input id="patientAge" type="number" min="0"><br>
+            <label for="patientGender">Gender:</label>
+            <select id="patientGender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select><br>
+            <label for="patientWeight">Weight (kg):</label>
+            <input id="patientWeight" type="number" min="0"><br>
+            <label for="patientLocation">Location (Google marker):</label>
+            <div id="map"></div><br> <!-- Map container -->
+            <label for="patientAddress">Address:</label>
+            <textarea id="patientAddress" rows="4"></textarea><br>
+            <label for="organizationName">Organization Name:</label>
+            <input id="organizationName" type="text"><br>
+            <label for="CaseArea"> Area</label>
+            <input id="CaseArea" type="text"><br>
+            <label for="CaseGovernorate"> Case Governorate:</label>
+            <input id="CaseGovernorate" type="text"><br>
+            <label for="medicalSpecialty">Medical Specialty:</label>
+            <input id="medicalSpecialty" type="text"><br>
+            <label for="caseDescription">Case Description:</label>
+            <textarea id="caseDescription" rows="4"></textarea><br>
+        </div>
+        
+        <div id="medical_supplies" class="donation-details">
+            <!-- Medical Supplies Details -->
+            <label for="medicalSupplyType">Medical Supply Type:</label>
+            <input id="medicalSupplyType" type="text"><br>
+            <label for="deviceType">Device Type:</label>
+            <input id="deviceType" type="text"><br>
+            <label for="use">Use:</label>
+            <input id="use" type="text"><br>
+            <label for="medicalQuantity">Quantity:</label>
+            <input id="medicalQuantity" type="number" min="1"><br>
+            <label for="image">Image:</label>
+            <input id="image" type="file"><br>
+        </div>
+        
+        <div id="blood_donations" class="donation-details">
+            <!-- Blood Donations Details -->
+            <label for="bloodType">Blood Type:</label>
+            <input id="bloodType" type="text"><br>
+            <label for="hospitalName">Hospital Name:</label>
+            <input id="hospitalName" type="text"><br>
+            <label for="hospitalArea">Hospital Area:</label>
+            <input id="hospitalArea" type="text"><br>
+            <label for="governorate">Governorate:</label>
+            <input id="governorate" type="text"><br>
+            <label for="hospitalAddress">Hospital Address:</label>
+            <textarea id="hospitalAddress" rows="4"></textarea><br>
+        </div>
+        
+        <!-- Rest of the code remains unchanged -->
+        
+        <label for="moreInfo">More Info:</label>
+        <textarea id="moreInfo" rows="4"></textarea>
+        
+        <button onclick="submit()">Create Post</button>
+        
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+    
+    <script>
+        // Function to show/hide donation details based on category selection
+        function showDonationDetails() {
+            var category = document.getElementById('category').value;
+            var donationDetails = document.getElementsByClassName('donation-details');
+            for (var i = 0; i < donationDetails.length; i++) {
+                donationDetails[i].style.display = 'none';
+            }
+            if (category) {
+                document.getElementById(category).style.display = 'block';
+                if (category === 'medical_case') {
+                    // If medical case category is chosen, initialize the map
+                    initMap();
+                }
+            }
+        }
+
+        // Initialize Google Maps
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 30.0444, lng: 31.2357 }, // Default center (Cairo coordinates)
+                zoom: 12
+            });
+
+            // Add a click event listener to the map
+            map.addListener('click', function (event) {
+                var clickedLocation = event.latLng; // Get the clicked location's coordinates
+                var marker = new google.maps.Marker({
+                    position: clickedLocation,
+                    map: map,
+                    title: 'Patient Location'
+                });
+
+                // Update the patient location details
+             //   document.getElementById('patientLocation').value = clickedLocation.lat() + ', ' + clickedLocation.lng();
+            });
+        }
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+        // Function to submit the donation post
+        function submit() {
+    var category = document.getElementById('category').value;
+    var moreInfo = document.getElementById('moreInfo').value;
+    
+    // Construct the donation post object
+    var additionalFields = {};
+    if (category === 'medical_case') {
+        additionalFields.patientName = document.getElementById('patientName').value;
+        additionalFields.patientAge = document.getElementById('patientAge').value;
+        additionalFields.patientGender = document.getElementById('patientGender').value;
+        additionalFields.patientWeight = document.getElementById('patientWeight').value;
+      //  additionalFields.patientLocation = document.getElementById('patientLocation').value;
+        additionalFields.patientAddress = document.getElementById('patientAddress').value;
+        additionalFields.organizationName = document.getElementById('organizationName').value;
+        additionalFields.medicalSpecialty = document.getElementById('medicalSpecialty').value;
+        additionalFields.caseDescription = document.getElementById('caseDescription').value;
+        additionalFields.CaseGovernorate = document.getElementById('CaseGovernorate').value;
+        additionalFields.CaseArea = document.getElementById('CaseArea').value;
+    } else if (category === 'medical_supplies') {
+        additionalFields.medicalSupplyType = document.getElementById('medicalSupplyType').value;
+        additionalFields.deviceType = document.getElementById('deviceType').value;
+        additionalFields.use = document.getElementById('use').value;
+        additionalFields.medicalQuantity = document.getElementById('medicalQuantity').value;
+        if (document.getElementById('image').files.length > 0) {
+            additionalFields.image = document.getElementById('image').files[0].name; // only storing file name for simplicity
+        }
+    } else if (category === 'blood_donations') {
+        additionalFields.bloodType = document.getElementById('bloodType').value;
+        additionalFields.hospitalName = document.getElementById('hospitalName').value;
+        additionalFields.hospitalArea = document.getElementById('hospitalArea').value;
+        additionalFields.governorate = document.getElementById('governorate').value;
+        additionalFields.hospitalAddress = document.getElementById('hospitalAddress').value;
+    }
+
+    var donationPosts = JSON.parse(localStorage.getItem('donationPosts')) || [];
+    donationPosts.push({
+        category: category,
+        moreInfo: moreInfo,
+        ...additionalFields
+    });
+
+            // Store the donation posts in local storage
+            localStorage.setItem('donationPosts', JSON.stringify(donationPosts));
+
+            // Redirect to desired page after submission
+            window.location.href = 'MedicalCases.html';
+        }
+    </script>
+
+    <!-- Load the Google Maps API with the callback to initialize the map -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4x9KD9_ecTbberyIO4vLzj7FUjxewxss&callback=initMap" async defer></script>
+</body>
+</html>
