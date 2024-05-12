@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Donation Pickup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        label, select, button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Donation Pickup</h1>
+
+        <h2>Transportation Selection</h2>
+        <label for="transportation">Select Transportation:</label>
+        <select id="transportation">
+            <option value="truck">Truck</option>
+            <option value="car">Car</option>
+            <option value="motorcycle">Motorcycle</option>
+        </select>
+
+        <h2>Schedule Selection</h2>
+        <label for="schedule">Select Pickup Time Slot:</label>
+        <select id="schedule">
+            <option value="morning">Morning (9:00 AM - 12:00 PM)</option>
+            <option value="afternoon">Afternoon (1:00 PM - 4:00 PM)</option>
+            <option value="evening">Evening (5:00 PM - 8:00 PM)</option>
+        </select>
+
+        <button onclick="savePreferences()">Save Preferences</button>
+    </div>
+
+    <script>
+        function savePreferences() {
+            const transportation = document.getElementById('transportation').value;
+            const schedule = document.getElementById('schedule').value;
+            
+            // Save preferences to local storage
+            localStorage.setItem('donationTransportation', transportation);
+            localStorage.setItem('donationSchedule', schedule);
+            
+            // Redirect to eta.html
+            window.location.href = 'eta.html';
+        }
+    </script>
+</body>
+</html>

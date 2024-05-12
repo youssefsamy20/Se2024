@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Donation Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        select, input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .donation-details {
+            display: none;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Donation Post</h1>
+        <label for="category">Select Category:</label>
+        <select id="category" required onchange="showDonationDetails()">
+            <option value="">Select Category</option>
+           
+            <option value="school_supplies">School Supplies</option>
+          
+            <option value="teaching">Teaching</option>
+           
+        </select><br>
+
+<div id="school_supplies" class="donation-details">
+    <label for="SchoolQuantity">Quantity:</label>
+    <input id="SchoolQuantity" type="number" min="1"><br>
+    <label for="supplyType">Select Type:</label>
+    <select id="supplyType" required onchange="showSupplyDetails()">
+        <option value="">Select Type</option>
+        <option value="books">Books</option>
+        <option value="stationary">Stationary</option>
+    </select><br>
+    <div id="books" class="donation-details">
+        <!-- Donation details for Books -->
+    </div>
+    <div id="stationary" class="donation-details">
+        <!-- Donation details for Stationary -->
+    </div>
+</div>
+<div id="teaching" class="donation-details">
+    <label for="subject">Subject:</label>
+    <input id="subject" type="text"><br>
+
+    <label for="area">Area:</label>
+    <input id="area" type="text"><br>
+
+    <label for="teachingGovernorate">teachingGovernorate:</label>
+    <input id="teachingGovernorate" type="text"><br>
+    
+</div>
+
+<label for="moreInfo">More Info:</label>
+        <textarea id="moreInfo" rows="4"></textarea>
+        
+        <button onclick="submit()">Create Post</button>
+        
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+
+<script>
+    function showDonationDetails() {
+        var category = document.getElementById('category').value;
+        var donationDetails = document.getElementsByClassName('donation-details');
+        for (var i = 0; i < donationDetails.length; i++) {
+            donationDetails[i].style.display = 'none';
+        }
+        if (category) {
+            document.getElementById(category).style.display = 'block';
+        }
+        
+    }
+
+    function toggleFoodQuantity() {
+        var foodType = document.getElementById('foodType').value;
+        var quantityLabel = document.getElementById('quantityLabel');
+        if (foodType === 'fruits_and_vegetables') {
+            quantityLabel.innerHTML = 'Quantity (kg):';
+        } else {
+            quantityLabel.innerHTML = 'Quantity:';
+        }
+    }
+
+    function submit() {
+        var category = document.getElementById('category').value;
+        var moreInfo = document.getElementById('moreInfo').value;
+        
+        var additionalFields = {};
+        if (category === 'clothes') {
+            additionalFields.clothesSize = document.getElementById('clothesSize').value;
+            additionalFields.clothesAge = document.getElementById('clothesAge').value;
+            additionalFields.clothesGender = document.getElementById('clothesGender').value;
+            additionalFields.season = document.getElementById('season').value;
+            additionalFields.material = document.getElementById('material').value;
+            additionalFields.clothesQuantity = document.getElementById('clothesQuantity').value;
+        } else if (category === 'toys') {
+            additionalFields.toyAge = document.getElementById('toyAge').value;
+            additionalFields.toyGender = document.getElementById('toyGender').value;
+            additionalFields.toyCategory = document.getElementById('toyCategory').value;
+            additionalFields.toyQuantity = document.getElementById('toyQuantity').value;
+        } else if (category === 'food') {
+            additionalFields.foodType = document.getElementById('foodType').value;
+            additionalFields.foodQuantity = document.getElementById('foodQuantity').value;
+        } else if (category === 'medical_supplies') {
+            additionalFields.medicalSupplyType = document.getElementById('medicalSupplyType').value;
+            additionalFields.deviceType = document.getElementById('deviceType').value;
+            additionalFields.use = document.getElementById('use').value;
+            additionalFields.medicalQuantity = document.getElementById('medicalQuantity').value;
+            if (document.getElementById('image').files.length > 0) {
+                additionalFields.image = document.getElementById('image').files[0].name; // only storing file name for simplicity
+            }
+        } else if (category === 'school_supplies') {
+            additionalFields.supplyType = document.getElementById('supplyType').value;
+            additionalFields.SchoolQuantity = document.getElementById('SchoolQuantity').value;
+            // nested details handling could be implemented similarly
+        }
+        else if (category === 'medical_case') {
+    // Medical case details
+    additionalFields.patientName = document.getElementById('patientName').value;
+    additionalFields.patientAge = document.getElementById('patientAge').value;
+    additionalFields.patientGender = document.getElementById('patientGender').value;
+    additionalFields.patientWeight = document.getElementById('patientWeight').value;
+    additionalFields.patientLocation = document.getElementById('patientLocation').value;
+    additionalFields.patientAddress = document.getElementById('patientAddress').value;
+    additionalFields.organizationName = document.getElementById('organizationName').value;
+    additionalFields.medicalSpecialty = document.getElementById('medicalSpecialty').value;
+    additionalFields.caseDescription = document.getElementById('caseDescription').value;
+}
+        else if (category === 'teaching') {
+additionalFields.subject = document.getElementById('subject').value;
+additionalFields.area = document.getElementById('area').value;
+additionalFields.teachingGovernorate = document.getElementById('teachingGovernorate').value;}
+
+         else if (category === 'blood_donations') {
+            additionalFields.patientName = document.getElementById('patientName').value;
+            additionalFields.bloodType = document.getElementById('bloodType').value;
+            additionalFields.hospitalName = document.getElementById('hospitalName').value;
+            additionalFields.hospitalArea = document.getElementById('hospitalArea').value;
+            additionalFields.governorate = document.getElementById('governorate').value;
+            additionalFields.hospitalAddress = document.getElementById('hospitalAddress').value;
+        }
+        
+
+        var donationPosts = JSON.parse(localStorage.getItem('donationPosts')) || [];
+        donationPosts.push({
+            category: category,
+            moreInfo: moreInfo,
+            ...additionalFields
+        });
+        localStorage.setItem('donationPosts', JSON.stringify(donationPosts));
+        window.location.href = 'desired_page.html';
+    }
+</script>
+</body>
+</html>
